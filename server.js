@@ -5,7 +5,7 @@ const webpackConfig = require('./webpack.config.js');
 const app = express();
 const http = require('http')
  
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 5001));
 
 const compiler = webpack(webpackConfig);
  
