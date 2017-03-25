@@ -1,34 +1,23 @@
 import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Counter from './Counter.jsx';
+import appReducer from './reducer';
+import App from './App';
  
-function counter(state = 0, action) {
-  switch (action.type) {
-  case 'INCREMENT':
-    return state + 1
-  case 'DECREMENT':
-    return state - 1
-  default:
-    return state
-  }
-};
+let reduxStore = createStore(appReducer);
 
-let store = createStore(counter);
-
-store.subscribe(() =>
-  console.log(store.getState())
+reduxStore.subscribe(() =>
+  console.log(reduxStore.getState())
 );
 
-store.dispatch({ type: 'INCREMENT' });
-store.dispatch({ type: 'INCREMENT' });
-store.dispatch({ type: 'DECREMENT' });
-
-
+reduxStore.dispatch({ type: 'LOG_IN' });
 
 document.addEventListener('DOMContentLoaded', function() {
   ReactDOM.render(
-    React.createElement(Counter),
+    <Provider store={reduxStore}>
+      <App />
+    </Provider>,
     document.getElementById('mount')
   );
 });
