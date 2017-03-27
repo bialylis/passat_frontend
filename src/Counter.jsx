@@ -1,5 +1,6 @@
 import React from 'react';
 import './firstStyles.scss';
+import  'whatwg-fetch';
 /**
  * A counter button: tap the button to increase the count.
  */
