@@ -52,6 +52,8 @@ a {
 }
 
 .logged-in-container {
+	min-height: 500px;
+	height: 100%;
 	display: flex;
 	flex-direction: row;
 }
@@ -61,6 +63,7 @@ a {
 	background-color: bisque;
 	width: 20%;
 	justify-content: flex-start;
+	align-items: center;
 }
 
 .groups-content {
@@ -112,4 +115,44 @@ a {
 
 .table-header {
 	height: 50px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+li {
+	margin-top: 8px;
+}
+
+.add-group-button {
+	margin-top: 16px;
+	width: 36px;
+	height: 36px;
+}
+
+.new-group-input {
+	margin-top: 16px;
+}
+
+body {
+	margin: 0;
+}
+
+.button-group {
+	display: flex;
+}
+
+.clickable {
+	cursor: pointer;
+	color: navy;
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.margin-right {
+	margin-right: 12px;
 }

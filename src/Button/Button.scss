@@ -1,0 +1,16 @@
+$button-color: #ed6a5a;
+
+.button {
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: white;
+  background-color: $button-color;
+  border-radius: 2px;
+  &:hover, &:focus {
+    background-color: lighten($button-color, 8%)
+  }
+  &:active {
+    background-color: darken($button-color, 24%)
+  }
+}

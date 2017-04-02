@@ -1,8 +1,9 @@
 import  'whatwg-fetch';
 import React, { Component } from 'react';
+import Button from '../Button';
 import './App.scss';
 
-const origin = "https://pasat-backend.herokuapp.com"
+const origin = "https://pasat-backend.herokuapp.com";
 
 const setFlow = (context, number) => () => {
 	context.setState({ flow: number });
@@ -92,7 +93,7 @@ class App extends Component {
                     {this.state.flow === 2 && (
 						<div className="info__logout">
 							{this.state.user.username}
-							<button className="login-button content" onClick={logoutUser(this)}>Logout</button>
+							<Button className="login-button content" onClick={logoutUser(this)}>Logout</Button>
 						</div>
                     )}
 				</div>
@@ -109,7 +110,7 @@ class App extends Component {
 								<input type="password" className="input-field" id="password-input-login"/>
 							</div>
 						</div>
-						<button className="login-button" onClick={loginUser(this)}>Log in</button>
+						<Button className="login-button" onClick={loginUser(this)}>Log in</Button>
 						<a onClick={setFlow(this, 1)}>Register</a>
 					</div>
 				)}
@@ -125,65 +126,81 @@ class App extends Component {
 								<input type="password" className="input-field" id="password-input-register"/>
 							</div>
 						</div>
-						<button className="login-button" onClick={registerUser(this)}>Register</button>
+						<Button className="login-button" onClick={registerUser(this)}>Register</Button>
 						<a onClick={setFlow(this, 0)}>Back</a>
 					</div>
 				)}
 				{this.state.flow === 2 && (
 					<div className="logged-in-container">
 						<div className="form-container group-list">
-							USER: {this.state.user.username}
+							<strong>Your groups</strong>
+							<ul>
+								<li className="clickable">group1</li>
+								<li className="clickable">group2</li>
+								<li className="clickable">group3</li>
+							</ul>
+							{true && (
+								<input className="new-group-input" placeholder="New group name..." type="text" />
+							)}
+							<Button className="add-group-button">
+								+
+							</Button>
 						</div>
 						<div className="form-container groups-content">
-							<div className="group-info">
-								<div className="group-description">
-									<div>
-										NAZWA GRUPY <br/>
-										Moja super grupa
+                            {true && (
+                            	<div className="group-info">
+									<div className="group-description">
+										<div>
+											NAZWA GRUPY <br/>
+											Moja super grupa
+										</div>
+										<div className="button-group">
+											<Button className="margin-right">Password settings</Button>
+											<Button>Delete group</Button>
+										</div>
 									</div>
-									<button>Password settings</button>
-								</div>
-								<div className="group-form">
-									<div className="group-input">
-										<span className="group-input__item">Login</span>
-										<input className="group-input__item" type="text" />
-										<button className="group-input__item">Show</button>
+									<div className="group-form">
+										<div className="group-input">
+											<span className="group-input__item">Login</span>
+											<input className="group-input__item" type="text" />
+											<Button className="group-input__item">Show</Button>
+										</div>
+										<div className="group-input">
+											<span className="group-input__item">Password</span>
+											<input className="group-input__item" type="password" />
+											<Button className="group-input__item">Show</Button>
+										</div>
 									</div>
-									<div className="group-input">
-										<span className="group-input__item">Password</span>
-										<input className="group-input__item" type="password" />
-										<button className="group-input__item">Show</button>
+									<div className="group-users">
+										<table className="users-table">
+											<thead>
+												<tr className="table-header">
+													<th>Username</th>
+													<th>Access</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>user1</td>
+													<td>Admin</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>user2</td>
+													<td>Full access</td>
+													<td><Button>X</Button></td>
+												</tr>
+												<tr>
+													<td>user3</td>
+													<td>Blocked</td>
+													<td></td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
-								<div className="group-users">
-									<table className="users-table">
-										<thead>
-											<tr className="table-header">
-												<th>Username</th>
-												<th>Access</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>user1</td>
-												<td>Admin</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td>user2</td>
-												<td>Full access</td>
-												<td><button>X</button></td>
-											</tr>
-											<tr>
-												<td>user3</td>
-												<td>Blocked</td>
-												<td></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
+                            )}
 						</div>
 					</div>
 				)}
