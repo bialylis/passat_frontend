@@ -9,7 +9,7 @@ const setFlow = (context, number) => () => {
 };
 
 const loginUser = (context) => () => {
-	var myHeaders = new Headers();
+	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
 	fetch(`${origin}/login`, {
 	    method: "POST",
@@ -84,11 +84,20 @@ class App extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="main">
 				<div className="info">
-					{this.state.info}
+					<div className="info__text">
+						{this.state.info}
+					</div>
+                    {this.state.flow === 2 && (
+						<div className="info__logout">
+							{this.state.user.username}
+							<button className="login-button content" onClick={logoutUser(this)}>Logout</button>
+						</div>
+                    )}
 				</div>
-				{this.state.flow === 0 && (
+
+                {this.state.flow === 0 && (
 					<div className="form-container">
 						<div>
 							<div className="labeled-input">
@@ -121,9 +130,61 @@ class App extends Component {
 					</div>
 				)}
 				{this.state.flow === 2 && (
-					<div className="form-container">
-						USER {this.state.user.username} LOGGED IN
-						<button className="login-button" onClick={logoutUser(this)}>Logout</button>
+					<div className="logged-in-container">
+						<div className="form-container group-list">
+							USER: {this.state.user.username}
+						</div>
+						<div className="form-container groups-content">
+							<div className="group-info">
+								<div className="group-description">
+									<div>
+										NAZWA GRUPY <br/>
+										Moja super grupa
+									</div>
+									<button>Password settings</button>
+								</div>
+								<div className="group-form">
+									<div className="group-input">
+										<span className="group-input__item">Login</span>
+										<input className="group-input__item" type="text" />
+										<button className="group-input__item">Show</button>
+									</div>
+									<div className="group-input">
+										<span className="group-input__item">Password</span>
+										<input className="group-input__item" type="password" />
+										<button className="group-input__item">Show</button>
+									</div>
+								</div>
+								<div className="group-users">
+									<table className="users-table">
+										<thead>
+											<tr className="table-header">
+												<th>Username</th>
+												<th>Access</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>user1</td>
+												<td>Admin</td>
+												<td></td>
+											</tr>
+											<tr>
+												<td>user2</td>
+												<td>Full access</td>
+												<td><button>X</button></td>
+											</tr>
+											<tr>
+												<td>user3</td>
+												<td>Blocked</td>
+												<td></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
 					</div>
 				)}
 			</div>
