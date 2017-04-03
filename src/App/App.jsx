@@ -1,4 +1,5 @@
-import  'whatwg-fetch';
+import 'whatwg-fetch';
+import { map, find } from 'lodash';
 import React, { Component } from 'react';
 import Button from '../Button';
 import './App.scss';
@@ -27,9 +28,11 @@ const loginUser = (context) => () => {
 		if(jsonData.token){
 			context.setState({
 				user: jsonData.user,
+				token: jsonData.token,
 				flow: 2,
 				info: "Login successful"
-			})
+			});
+            fetchGroups(context);
 		} else {
 			context.setState({
 				flow: 0,
@@ -37,7 +40,27 @@ const loginUser = (context) => () => {
 			})
 		}
 	});
-}
+};
+
+const fetchGroups = (context) => {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('x-auth-token', context.state.token);
+    fetch(`${origin}/auth/group`, {
+        method: "GET",
+        headers: myHeaders
+    }).then((response) => {
+        console.log(response);
+        return response.json();
+    }).then((jsonData) => {
+    	console.log(jsonData);
+		context.setState({
+			...{state: context.state},
+			groups: jsonData,
+			info: "Fetched Groups"
+		});
+    });
+};
 
 const registerUser = (context) => () => {
 	var myHeaders = new Headers();
@@ -65,14 +88,86 @@ const registerUser = (context) => () => {
 			})
 		}
 	});
-}
+};
+
+const changeActiveGroup = (context, id) => () => {
+	context.setState({
+		...context.state,
+		selectedGroup: id,
+		info: `Picked group with ${id}`
+	});
+	console.log(context.state);
+};
+
+
+
+const getSelectedGroupName = (context) => {
+    const selectedGroup = find(context.state.groups, (group) => group.id == context.state.selectedGroup);
+    if(selectedGroup){
+        return selectedGroup.name || '';
+	} else {
+    	return '';
+	}
+};
+
+const addGroup = (context) => () => {
+	if(document.getElementById('new-group-name').value !== '') {
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        myHeaders.append('x-auth-token', context.state.token);
+        fetch(`${origin}/auth/group`, {
+            method: "POST",
+            headers: myHeaders,
+            body: JSON.stringify({
+                name: document.getElementById('new-group-name').value
+   	 		})
+    	}).then((response) => {
+            console.log(response);
+            return response.json();
+        }).then((jsonData) => {
+            const newTable = context.state.groups.concat(jsonData);
+        	context.setState({
+				...context.state,
+				groups: newTable
+			});
+            console.log(context.state);
+        });
+    }
+};
+
+const deleteGroup = (context) => () => {
+	console.log('deleting');
+	const id = context.state.selectedGroup;
+	const myHeaders = new Headers();
+	myHeaders.append('Content-Type', 'application/json');
+	myHeaders.append('x-auth-token', context.state.token);
+	fetch(`${origin}/auth/group/${id}`, {
+		method: "DELETE",
+		headers: myHeaders
+	}).then((response) => {
+		console.log(response);
+		return response.json();
+	}).then((jsonData) => {
+        const newTable = context.state.groups.filter(group => group.id != id);
+		console.log(newTable);
+        context.setState({
+			...context.state,
+			groups: newTable,
+			selectedGroup: undefined,
+			info: `Deleted group ${id}`
+		});
+	});
+};
+
 
 const logoutUser = (context) => () => {
 	context.setState({
 		flow: 0,
-		info: "User logged out"
-	})
-}
+        selectedGroup: undefined,
+        info: "User logged out"
+	});
+	console.log('logout', context.state);
+};
 
 class App extends Component {
 	constructor() {
@@ -135,28 +230,25 @@ class App extends Component {
 						<div className="form-container group-list">
 							<strong>Your groups</strong>
 							<ul>
-								<li className="clickable">group1</li>
-								<li className="clickable">group2</li>
-								<li className="clickable">group3</li>
+								{map(this.state.groups, (group) => {
+                                    return <li key={`${group.id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.id)}>{group.name}</li>
+                                })}
 							</ul>
-							{true && (
-								<input className="new-group-input" placeholder="New group name..." type="text" />
-							)}
-							<Button className="add-group-button">
+							<input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
+							<Button className="add-group-button" onClick={addGroup(this)}>
 								+
 							</Button>
 						</div>
 						<div className="form-container groups-content">
-                            {true && (
+                            {this.state.selectedGroup !== undefined && (
                             	<div className="group-info">
 									<div className="group-description">
 										<div>
-											NAZWA GRUPY <br/>
-											Moja super grupa
+											{getSelectedGroupName(this)}
 										</div>
 										<div className="button-group">
 											<Button className="margin-right">Password settings</Button>
-											<Button>Delete group</Button>
+											<Button className="margin-right" onClick={deleteGroup(this)}>Delete group</Button>
 										</div>
 									</div>
 									<div className="group-form">
