@@ -180,7 +180,7 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="main">
+			<div className="main max-height">
 				<div className="info">
 					<div className="info__text">
 						{this.state.info}
@@ -226,7 +226,7 @@ class App extends Component {
 					</div>
 				)}
 				{this.state.flow === 2 && (
-					<div className="logged-in-container">
+					<div className="logged-in-container max-height">
 						<div className="form-container group-list">
 							<strong>Your groups</strong>
 							<ul>
