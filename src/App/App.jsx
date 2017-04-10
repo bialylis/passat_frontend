@@ -274,7 +274,7 @@ class App extends Component {
 								<strong>Your groups</strong>
 								<ul>
 									{map(this.state.groups, (group) => {
-										return <li key={`${group.group_id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.groypid)}>{group.name}</li>
+										return <li key={`${group.group_id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.group_id)}>{group.name}</li>
 									})}
 								</ul>
 								<input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
