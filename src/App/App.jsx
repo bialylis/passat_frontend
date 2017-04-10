@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import { map, find } from 'lodash';
 import React, { Component } from 'react';
 import Button from '../Button';
+import Input from '../Input';
 import './App.scss';
 
 const origin = "https://pasat-backend.herokuapp.com";
@@ -70,7 +71,8 @@ const registerUser = (context) => () => {
 	    headers: myHeaders,
 	    body: JSON.stringify({
 	    	username: document.getElementById('username-input-register').value,
-			password: document.getElementById('password-input-register').value
+			password: document.getElementById('password-input-register').value,
+			email: document.getElementById('email-input-register').value
 	    })
 	}).then((response) => {
 		console.log(response);
@@ -185,7 +187,7 @@ class App extends Component {
 					<div className="info__text">
 						{this.state.info}
 					</div>
-                    {this.state.flow === 2 && (
+                    {this.state.flow === 101 && (
 						<div className="info__logout">
 							{this.state.user.username}
 							<Button className="login-button content" onClick={logoutUser(this)}>Logout</Button>
@@ -194,105 +196,147 @@ class App extends Component {
 				</div>
 
                 {this.state.flow === 0 && (
-					<div className="form-container">
-						<div>
-							<div className="labeled-input">
-								<label>Username:</label>
-								<input type="text" className="input-field" id="username-input-login"/>
+                	<div className="login">
+						<div className="login__header">
+							pass@
+						</div>
+						<div className="login__content">
+							<div className="login__navbar">
 							</div>
-							<div className="labeled-input">
-								<label>Password:</label>
-								<input type="password" className="input-field" id="password-input-login"/>
+							<div className="login__container">
+								<div className="login__signup">
+									Log in
+									<Button onClick={setFlow(this, 1)}>
+										Sign up
+									</Button>
+								</div>
+								<div className="login__inputs">
+									<div className="labeled-input">
+										<label className="login__label">Username</label>
+										<Input type="text" className="input-field" id="username-input-login"/>
+									</div>
+									<div className="labeled-input">
+										<label className="login__label">Password</label>
+										<Input type="password" className="input-field" id="password-input-login"/>
+									</div>
+									<Button className="login-button" onClick={loginUser(this)}>Log in</Button>
+									<a onClick={() => console.log('Forgot pass')}><i>Forgot password</i></a>
+								</div>
 							</div>
 						</div>
-						<Button className="login-button" onClick={loginUser(this)}>Log in</Button>
-						<a onClick={setFlow(this, 1)}>Register</a>
 					</div>
 				)}
 				{this.state.flow === 1 && (
-					<div className="form-container">
-						<div>
-							<div className="labeled-input">
-								<label>Username:</label>
-								<input type="text" className="input-field" id="username-input-register"/>
+				<div className="login">
+					<div className="login__header">
+						pass@
+					</div>
+					<div className="login__content">
+						<div className="login__navbar">
+						</div>
+						<div className="login__container">
+							<div className="register__title">
+								Sign up
 							</div>
-							<div className="labeled-input">
-								<label>Password:</label>
-								<input type="password" className="input-field" id="password-input-register"/>
+							<div className="register__inputs">
+								<div className="labeled-input">
+									<label className="login__label">Username</label>
+									<input type="text" className="input-field" id="username-input-register"/>
+								</div>
+								<div className="labeled-input">
+									<label className="login__label">Password</label>
+									<input type="password" className="input-field" id="password-input-register"/>
+								</div>
+								<div className="labeled-input">
+									<label className="login__label">Email</label>
+									<input type="email" className="input-field" id="email-input-register"/>
+								</div>
+								<Button className="login-button" onClick={registerUser(this)}>Register</Button>
+								<a onClick={setFlow(this, 0)}><i>Back</i></a>
 							</div>
 						</div>
-						<Button className="login-button" onClick={registerUser(this)}>Register</Button>
-						<a onClick={setFlow(this, 0)}>Back</a>
 					</div>
+				</div>
 				)}
 				{this.state.flow === 2 && (
-					<div className="logged-in-container max-height">
-						<div className="form-container group-list">
-							<strong>Your groups</strong>
-							<ul>
-								{map(this.state.groups, (group) => {
-                                    return <li key={`${group.id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.id)}>{group.name}</li>
-                                })}
-							</ul>
-							<input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
-							<Button className="add-group-button" onClick={addGroup(this)}>
-								+
-							</Button>
-						</div>
-						<div className="form-container groups-content">
-                            {this.state.selectedGroup !== undefined && (
-                            	<div className="group-info">
-									<div className="group-description">
-										<div>
-											{getSelectedGroupName(this)}
-										</div>
-										<div className="button-group">
-											<Button className="margin-right">Password settings</Button>
-											<Button className="margin-right" onClick={deleteGroup(this)}>Delete group</Button>
-										</div>
-									</div>
-									<div className="group-form">
-										<div className="group-input">
-											<span className="group-input__item">Login</span>
-											<input className="group-input__item" type="text" />
-											<Button className="group-input__item">Show</Button>
-										</div>
-										<div className="group-input">
-											<span className="group-input__item">Password</span>
-											<input className="group-input__item" type="password" />
-											<Button className="group-input__item">Show</Button>
-										</div>
-									</div>
-									<div className="group-users">
-										<table className="users-table">
-											<thead>
-												<tr className="table-header">
-													<th>Username</th>
-													<th>Access</th>
-													<th></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>user1</td>
-													<td>Admin</td>
-													<td></td>
-												</tr>
-												<tr>
-													<td>user2</td>
-													<td>Full access</td>
-													<td><Button>X</Button></td>
-												</tr>
-												<tr>
-													<td>user3</td>
-													<td>Blocked</td>
-													<td></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
+					<div>
+						<div className="login__header">
+							pass@
+							<div className="info__logout">
+								<div className="logout-container">
+									{this.state.user.username}
+									<Button className="login-button content" onClick={logoutUser(this)}>Logout</Button>
 								</div>
-                            )}
+							</div>
+						</div>
+						<div className="logged-in-container max-height">
+							<div className="form-container group-list">
+								<strong>Your groups</strong>
+								<ul>
+									{map(this.state.groups, (group) => {
+										return <li key={`${group.id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.id)}>{group.name}</li>
+									})}
+								</ul>
+								<input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
+								<Button className="add-group-button" onClick={addGroup(this)}>
+									+
+								</Button>
+							</div>
+							<div className="form-container groups-content">
+								{this.state.selectedGroup !== undefined && (
+									<div className="group-info">
+										<div className="group-description">
+											<div>
+												{getSelectedGroupName(this)}
+											</div>
+											<div className="button-group">
+												<Button className="margin-right">Password settings</Button>
+												<Button className="margin-right" onClick={deleteGroup(this)}>Delete group</Button>
+											</div>
+										</div>
+										<div className="group-form">
+											<div className="group-input">
+												<span className="group-input__item">Login</span>
+												<input className="group-input__item" type="text" />
+												<Button className="group-input__item">Show</Button>
+											</div>
+											<div className="group-input">
+												<span className="group-input__item">Password</span>
+												<input className="group-input__item" type="password" />
+												<Button className="group-input__item">Show</Button>
+											</div>
+										</div>
+										<div className="group-users">
+											<table className="users-table">
+												<thead>
+													<tr className="table-header">
+														<th>Username</th>
+														<th>Access</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>user1</td>
+														<td>Admin</td>
+														<td></td>
+													</tr>
+													<tr>
+														<td>user2</td>
+														<td>Full access</td>
+														<td><Button>X</Button></td>
+													</tr>
+													<tr>
+														<td>user3</td>
+														<td>Blocked</td>
+														<td></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 				)}

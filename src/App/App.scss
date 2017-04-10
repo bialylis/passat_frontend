@@ -1,24 +1,27 @@
 .form-container {
-	margin-top: 100px;
-	display: flex;
-	flex-direction: column;
- 	justify-content: center;
- 	align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 .input-field {
-	width: 150px;
-	height: 24px;
+   background-color: #f4f1bb;
+   border: 1px solid #ed6a5a;
+   width: 150px;
+   height: 24px;
 }
 
 .labeled-input {
 	margin-bottom: 12px;
 	display: flex;
-	flex-direction: column;
 }
 
 .login-button {
-	margin-bottom: 8px;
+  width: 150px;
+  margin-bottom: 8px;
 }
 
 a {
@@ -45,9 +48,13 @@ a {
 	}
 
 	&__logout {
-		width: 100px;
-		font-size: 16px;
-		color: black;
+      flex-grow: 1;
+      margin-right: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 16px;
+      color: black;
 	}
 }
 
@@ -58,14 +65,14 @@ a {
 
 .group-list {
 	padding: 12px 24px;
-	background-color: bisque;
+	background-color: #f4f1bb;
 	width: 20%;
 	justify-content: flex-start;
 	align-items: center;
 }
 
 .groups-content {
-	background-color: aliceblue;
+	background-color: #e6ebe0;
 	width: 80%;
 	justify-content: flex-start;
 }
@@ -157,4 +164,86 @@ body {
 
 .max-height {
 	height: 100%;
+}
+
+.login {
+  height: 100%;
+
+  &__header {
+    display: flex;
+    height: 70px;
+    background-color: #f4f1bb;
+    align-items: center;
+    padding-left: 100px;
+    font-size: 40px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: row;
+    background-color: #e6ebe0;
+  }
+
+  &__navbar {
+    padding: 12px 24px;
+    background-color: #d4ef97;
+    width: 20%;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &__container {
+    height: 100%;
+    width: 80%;
+  }
+
+  &__signup {
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 24px;
+    margin: 24px 0;
+    height: 70px;
+    background-color: white;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  &__label {
+    width: 100px;
+  }
+}
+
+.register {
+  &__title {
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 24px;
+    margin: 24px 0;
+    height: 70px;
+    background-color: white;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+  }
+}
+
+.logout-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
