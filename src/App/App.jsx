@@ -104,7 +104,7 @@ const changeActiveGroup = (context, id) => () => {
 
 
 const getSelectedGroupName = (context) => {
-    const selectedGroup = find(context.state.groups, (group) => group.id == context.state.selectedGroup);
+    const selectedGroup = find(context.state.groups, (group) => group.group_id == context.state.selectedGroup);
     if(selectedGroup){
         return selectedGroup.name || '';
 	} else {
@@ -150,7 +150,7 @@ const deleteGroup = (context) => () => {
 		console.log(response);
 		return response.json();
 	}).then((jsonData) => {
-        const newTable = context.state.groups.filter(group => group.id != id);
+        const newTable = context.state.groups.filter(group => group.group_id != id);
 		console.log(newTable);
         context.setState({
 			...context.state,
@@ -274,7 +274,7 @@ class App extends Component {
 								<strong>Your groups</strong>
 								<ul>
 									{map(this.state.groups, (group) => {
-										return <li key={`${group.id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.id)}>{group.name}</li>
+										return <li key={`${group.group_id}_${group.name}`} className="clickable" onClick={changeActiveGroup(this, group.groypid)}>{group.name}</li>
 									})}
 								</ul>
 								<input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
