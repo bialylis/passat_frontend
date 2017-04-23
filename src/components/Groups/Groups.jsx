@@ -13,7 +13,7 @@ const addGroup = (token, addToGroups) => () => {
 };
 
 const getSelectedGroupName = (groups, selectedGroup) => () => {
-    const selectedGroupData = find(groups, (group) => group.id === selectedGroup);
+    const selectedGroupData = find(groups, (group) => group.group_id === selectedGroup);
     if(selectedGroupData){
         return selectedGroupData.name || '';
     } else {
