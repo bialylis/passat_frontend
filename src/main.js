@@ -3,13 +3,9 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import appReducer from './reducer';
-import App from './App';
+import App from './containers/App';
  
 let reduxStore = createStore(appReducer);
-
-reduxStore.subscribe(() =>
-  console.log(reduxStore.getState())
-);
 
 reduxStore.dispatch({ type: 'LOG_IN' });
 
