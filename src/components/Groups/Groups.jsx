@@ -2,6 +2,8 @@ import React from 'react';
 import { map, find } from 'lodash';
 import { addGroup as restAddGroup, deleteGroup as restDeleteGroup } from '../../domain/rest';
 import Button from '../Button';
+import Input from '../Input';
+import Modal from '../Modal';
 
 const addGroup = (token, addToGroups) => () => {
     if(document.getElementById('new-group-name').value !== '') {
@@ -27,7 +29,7 @@ const deleteGroup = (token, selectedGroup, deleteFromGroups) => () => {
     })
 };
 
-const Groups = ({user, groups, token, selectedGroup, logOut, selectGroup, addToGroups, deleteFromGroups}) => (
+const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showModal, hideModal}) => (
     <div>
         <div className="login__header">
             pass@
@@ -59,7 +61,7 @@ const Groups = ({user, groups, token, selectedGroup, logOut, selectGroup, addToG
                                 {getSelectedGroupName(groups, selectedGroup)}
                             </div>
                             <div className="button-group">
-                                <Button className="margin-right">Password settings</Button>
+                                <Button className="margin-right" onClick={showModal}>Password settings</Button>
                                 <Button className="margin-right" onClick={deleteGroup(token, selectedGroup, deleteFromGroups)}>Delete group</Button>
                             </div>
                         </div>
@@ -107,6 +109,19 @@ const Groups = ({user, groups, token, selectedGroup, logOut, selectGroup, addToG
                 )}
             </div>
         </div>
+        {modalVisible && (
+            <Modal title="Enter your password">
+                <Input type="password" id="input-modal-password"/>
+                <div className="modal-buttons">
+                    <Button className="margin-top button-wide" onClick={() => {console.log('accepted');}}>
+                        Accept
+                    </Button>
+                    <Button className="margin-top button-wide" onClick={hideModal}>
+                        Cancel
+                    </Button>
+                </div>
+            </Modal>
+        )}
     </div>
 );
 

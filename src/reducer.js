@@ -74,6 +74,18 @@ const appReducer = (state = {}, action) => {
                 selectedGroup: undefined,
                 info: 'Group deleted'
             };
+        case 'SHOW_MODAL':
+            console.log(action.type);
+            return {
+                ...state,
+                modalVisible: true
+            };
+        case 'HIDE_MODAL':
+            console.log(action.type);
+            return {
+                ...state,
+                modalVisible: false
+            };
     default:
       return state
   }

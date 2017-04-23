@@ -18,6 +18,12 @@ const mapDispatchToProps = (dispatch) => ({
     },
     deleteFromGroups: (selectedGroupId) => {
         dispatch({type: 'DELETE_GROUP', selectedGroupId: selectedGroupId})
+    },
+    showModal: () => {
+        dispatch({type: 'SHOW_MODAL'})
+    },
+    hideModal: () => {
+        dispatch({type: 'HIDE_MODAL'})
     }
 });
 
