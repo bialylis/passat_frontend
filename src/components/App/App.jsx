@@ -11,11 +11,11 @@ import './App.scss';
 const App = ({flow, info}) => {
 	return (
 		<div className="main max-height">
-			<div className="info">
+			{/*<div className="info">
 				<div className="info__text">
 					{info}
 				</div>
-			</div>
+			</div>*/}
 			{flow === 0 && <LogIn />}
 			{flow === 1 && <Register />}
 			{flow === 2 && <Groups />}

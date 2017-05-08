@@ -9,7 +9,7 @@
 
 .input-field {
    background-color: #f4f1bb;
-   border: 1px solid #ed6a5a;
+   border: 1px solid rgb(251,147,34);
    width: 150px;
    height: 24px;
 }
@@ -26,10 +26,10 @@
 
 a {
 	text-decoration: underline;
-	color: blue;
+	color: black;
 
 	&:hover, &:active {
-		color: darkblue;
+		color: rgb(59,119,173);
 		cursor: pointer;
 	}
 }
@@ -64,16 +64,24 @@ a {
 }
 
 .group-list {
+    z-index: 2;
+    -webkit-box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
 	padding: 12px 24px;
-	background-color: #f4f1bb;
+	background-color: rgb(133,196,250);
 	width: 20%;
 	justify-content: flex-start;
 	align-items: center;
 }
 
 .groups-content {
-	background-color: #e6ebe0;
-	width: 80%;
+    -webkit-box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
+    box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
+    height: 100%;
+    width: 80%;
+	background-color: rgb(253,220,171);
 	justify-content: flex-start;
 }
 
@@ -103,6 +111,8 @@ a {
 	margin-bottom: 8px;
 	&__item {
 		margin-right: 12px;
+        padding-top: 0;
+        padding-bottom: 0;
 		width: 100px;
 	}
 }
@@ -152,7 +162,7 @@ body {
 
 .clickable {
 	cursor: pointer;
-	color: navy;
+	color: black;
 	&:hover {
 		text-decoration: underline;
 	}
@@ -172,27 +182,33 @@ body {
   &__header {
     display: flex;
     height: 70px;
-    background-color: #f4f1bb;
+    background-color: rgb(133,196,250);
     align-items: center;
-    padding-left: 100px;
     font-size: 40px;
   }
 
   &__content {
     display: flex;
     flex-direction: row;
-    background-color: #e6ebe0;
+    background-color: rgb(253,220,171);
   }
 
   &__navbar {
+    z-index: 2;
+    -webkit-box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 19px -1px rgba(0,0,0,0.75);
     padding: 12px 24px;
-    background-color: #d4ef97;
+    background-color: rgb(102,163,218);
     width: 20%;
     justify-content: flex-start;
     align-items: center;
   }
 
   &__container {
+    -webkit-box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
+    box-shadow: inset 2px 12px 20px -10px rgba(0,0,0,0.75);
     height: 100%;
     width: 80%;
   }
@@ -206,7 +222,7 @@ body {
     padding: 0 24px;
     margin: 24px 0;
     height: 70px;
-    background-color: white;
+    background-color: rgb(255,248,179);
   }
 
   &__inputs {
@@ -231,7 +247,7 @@ body {
     padding: 0 24px;
     margin: 24px 0;
     height: 70px;
-    background-color: white;
+    background-color: rgb(255,248,179);
   }
 
   &__inputs {
@@ -255,5 +271,22 @@ body {
 .modal-buttons {
   display: flex;
   justify-content: space-around;
-  width: 50%;
+  width: 75%;
+}
+
+.basic-flex {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  background-color: rgb(253,220,171);
+  padding: 0 24px;
+  width: 25%;
+  height: 100%;
+}
+.logo-side {
+  border-top: 70px solid rgb(253,220,171);
+  border-right: 150px solid transparent;
 }

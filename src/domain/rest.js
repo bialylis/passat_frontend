@@ -47,6 +47,20 @@ export const deleteGroup = (xAuthToken, id) => getJsonData(
     })
 );
 
+export const addMemberToGroup = (xAuthToken, groupId, userId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/${userId}`, {
+        method: "POST",
+        headers: prepareHeaders(xAuthToken)
+    })
+);
+
+export const removeMemberFromGroup = (xAuthToken, groupId, userId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/${userId}`, {
+        method: "DELETE",
+        headers: prepareHeaders(xAuthToken)
+    })
+);
+
 const prepareHeaders = (xAuthToken) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');

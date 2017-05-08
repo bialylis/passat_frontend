@@ -1,6 +1,6 @@
 import React from 'react';
 import { map, find } from 'lodash';
-import { addGroup as restAddGroup, deleteGroup as restDeleteGroup } from '../../domain/rest';
+import { addGroup as restAddGroup, deleteGroup as restDeleteGroup, addMemberToGroup as restAddMemberToGroup, removeMemberFromGroup as restRemoveMemberFromGroup } from '../../domain/rest';
 import Button from '../Button';
 import Input from '../Input';
 import Modal from '../Modal';
@@ -29,10 +29,29 @@ const deleteGroup = (token, selectedGroup, deleteFromGroups) => () => {
     })
 };
 
-const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showModal, hideModal}) => (
+const addMember = (token, selectedGroup, hideModal) => () => {
+    const userId = document.getElementById('input-modal-new-member-id').value;
+    restAddMemberToGroup(token, selectedGroup, userId).then(() => {
+        console.log('ADDED');
+        hideModal();
+    })
+};
+
+const removeMember = (token, selectedGroup, hideModal) => () => {
+    const userId = document.getElementById('input-modal-remove-member-id').value;
+    restRemoveMemberFromGroup(token, selectedGroup, userId).then(() => {
+        console.log('REMOVED');
+        hideModal();
+    })
+};
+
+const Groups = ({user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal}) => (
     <div>
         <div className="login__header">
-            pass@
+            <div className="logo">
+                {user.username}
+            </div>
+            <span className="logo-side" />
             <div className="info__logout">
                 <div className="logout-container">
                     {user.username}
@@ -48,7 +67,7 @@ const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selec
                         return <li key={`${group.group_id}_${group.name}`} className="clickable" onClick={selectGroup(group.group_id)}>{group.name}</li>
                     })}
                 </ul>
-                <input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
+                <Input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
                 <Button className="add-group-button" onClick={addGroup(token, addToGroups)}>
                     +
                 </Button>
@@ -61,19 +80,19 @@ const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selec
                                 {getSelectedGroupName(groups, selectedGroup)}
                             </div>
                             <div className="button-group">
-                                <Button className="margin-right" onClick={showModal}>Password settings</Button>
+                                <Button className="margin-right" onClick={() => console.log('clicked settings')}>Password settings</Button>
                                 <Button className="margin-right" onClick={deleteGroup(token, selectedGroup, deleteFromGroups)}>Delete group</Button>
                             </div>
                         </div>
                         <div className="group-form">
                             <div className="group-input">
                                 <span className="group-input__item">Login</span>
-                                <input className="group-input__item" type="text" />
+                                <Input className="group-input__item" type="text" />
                                 <Button className="group-input__item">Show</Button>
                             </div>
                             <div className="group-input">
                                 <span className="group-input__item">Password</span>
-                                <input className="group-input__item" type="password" />
+                                <Input className="group-input__item" type="password" />
                                 <Button className="group-input__item">Show</Button>
                             </div>
                         </div>
@@ -83,7 +102,10 @@ const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selec
                                 <tr className="table-header">
                                     <th>Username</th>
                                     <th>Access</th>
-                                    <th></th>
+                                    <th>
+                                        <Button className="margin-right" onClick={showAddMemberModal}>Add member</Button>
+                                        <Button onClick={showRemoveMemberModal}>Remove member</Button>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -109,14 +131,27 @@ const Groups = ({user, groups, token, selectedGroup, modalVisible, logOut, selec
                 )}
             </div>
         </div>
-        {modalVisible && (
-            <Modal title="Enter your password">
-                <Input type="password" id="input-modal-password"/>
+        {modalAddMemberVisible && (
+            <Modal title="Enter member id">
+                <Input type="text" id="input-modal-new-member-id"/>
                 <div className="modal-buttons">
-                    <Button className="margin-top button-wide" onClick={() => {console.log('accepted');}}>
-                        Accept
+                    <Button className="margin-top button-wide" onClick={addMember(token, selectedGroup, hideAddMemberModal)}>
+                        Add member
                     </Button>
-                    <Button className="margin-top button-wide" onClick={hideModal}>
+                    <Button className="margin-top button-wide" onClick={hideAddMemberModal}>
+                        Cancel
+                    </Button>
+                </div>
+            </Modal>
+        )}
+        {modalRemoveMemberVisible && (
+            <Modal title="Enter member id">
+                <Input type="text" id="input-modal-remove-member-id"/>
+                <div className="modal-buttons">
+                    <Button className="margin-top button-wide" onClick={removeMember(token, selectedGroup, hideRemoveMemberModal)}>
+                        Remove member
+                    </Button>
+                    <Button className="margin-top button-wide" onClick={hideRemoveMemberModal}>
                         Cancel
                     </Button>
                 </div>

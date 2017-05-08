@@ -1,4 +1,5 @@
 .modal{
+  background-color: rgb(255,248,179);
   position: fixed;
   padding: 12px;
   width: 40%;
@@ -6,7 +7,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;
-  background: #FFF;
   justify-content: space-between;
   display: flex;
   align-items: center;
@@ -30,5 +30,5 @@
 }
 
 .button-wide {
-  width: 100px;
+  width: 150px;
 }

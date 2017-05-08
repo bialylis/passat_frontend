@@ -1,5 +1,6 @@
 import React  from 'react';
 import { registerUser as restRegisterUser } from '../../domain/rest';
+import Header from '../Header';
 import Button from '../Button';
 
 const registerUser = (logIn, error, newInfo) => () => {
@@ -18,15 +19,14 @@ const registerUser = (logIn, error, newInfo) => () => {
 
 const Register = ({logIn, error, newInfo}) => (
     <div className="login">
-        <div className="login__header">
-            pass@
-        </div>
+        <Header>pass@</Header>
         <div className="login__content">
             <div className="login__navbar">
             </div>
             <div className="login__container">
                 <div className="register__title">
-                    Sign up
+                    <span className="basic-flex">Sign up</span>
+                    <span className="basic-flex"/>
                 </div>
                 <div className="register__inputs">
                     <div className="labeled-input">

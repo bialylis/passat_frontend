@@ -1,5 +1,6 @@
 import React from 'react';
 import { loginUser as restLoginUser , fetchGroups as restFetchGroups } from '../../domain/rest';
+import Header from '../Header';
 import Button from '../Button';
 import Input from '../Input';
 
@@ -26,18 +27,18 @@ const fetchGroups = (token, setGroups) => {
 
 const LogIn = ({ signUp, loggedIn, error, setGroups }) => (
     <div className="login">
-        <div className="login__header">
-            pass@
-        </div>
+        <Header>pass@</Header>
         <div className="login__content">
             <div className="login__navbar">
             </div>
             <div className="login__container">
                 <div className="login__signup">
-                    Log in
-                    <Button onClick={signUp}>
-                        Sign up
-                    </Button>
+                    <span className="basic-flex">Log in</span>
+                    <div className="basic-flex">
+                        <Button onClick={signUp}>
+                            Sign up
+                        </Button>
+                    </div>
                 </div>
                 <div className="login__inputs">
                     <div className="labeled-input">
