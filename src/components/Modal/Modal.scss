@@ -11,6 +11,9 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  -webkit-box-shadow: 0px 0px 10px 8px rgba(255,248,179,1);
+  -moz-box-shadow: 0px 0px 10px 8px rgba(255,248,179,1);
+  box-shadow: 0px 0px 10px 8px rgba(255,248,179,1);
 }
 
 .modal-overlay {

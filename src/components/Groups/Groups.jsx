@@ -1,12 +1,27 @@
 import React from 'react';
 import { map, find } from 'lodash';
-import { addGroup as restAddGroup, deleteGroup as restDeleteGroup, addMemberToGroup as restAddMemberToGroup, removeMemberFromGroup as restRemoveMemberFromGroup } from '../../domain/rest';
+import {
+    addGroup as restAddGroup,
+    deleteGroup as restDeleteGroup,
+    addMemberToGroup as restAddMemberToGroup,
+    removeMemberFromGroup as restRemoveMemberFromGroup,
+    getGroup as restGetGroup
+} from '../../domain/rest';
 import Button from '../Button';
 import Input from '../Input';
 import Modal from '../Modal';
+import UserIcon from '../../icons/user-icon.png';
+import Plus from '../../icons/plus.png';
+
+const getGroup = (token, groupId) => () => {
+    //TODO adapt it for groups details after it gets proper data
+    restGetGroup(token, groupId).then((jsonData) => {
+        console.log('GETGROUP', jsonData);
+    })
+};
 
 const addGroup = (token, addToGroups) => () => {
-    if(document.getElementById('new-group-name').value !== '') {
+    if(document.getElementById('new-group-name').value.trim() !== '') {
         const name = document.getElementById('new-group-name').value;
         restAddGroup(token, name).then((jsonData) => {
             addToGroups(jsonData);
@@ -14,7 +29,7 @@ const addGroup = (token, addToGroups) => () => {
     }
 };
 
-const getSelectedGroupName = (groups, selectedGroup) => () => {
+const getSelectedGroupName = (groups, selectedGroup) => {
     const selectedGroupData = find(groups, (group) => group.group_id === selectedGroup);
     if(selectedGroupData){
         return selectedGroupData.name || '';
@@ -49,28 +64,26 @@ const Groups = ({user, groups, token, selectedGroup, modalAddMemberVisible, moda
     <div>
         <div className="login__header">
             <div className="logo">
+                <img className="img-medium" src={UserIcon} />
                 {user.username}
             </div>
             <span className="logo-side" />
             <div className="info__logout">
                 <div className="logout-container">
-                    {user.username}
                     <Button className="login-button content" onClick={logOut}>Logout</Button>
                 </div>
             </div>
         </div>
         <div className="logged-in-container max-height">
             <div className="form-container group-list">
-                <strong>Your groups</strong>
+                <strong className="padding-top">Your groups</strong>
                 <ul>
                     {map(groups, (group) => {
                         return <li key={`${group.group_id}_${group.name}`} className="clickable" onClick={selectGroup(group.group_id)}>{group.name}</li>
                     })}
                 </ul>
                 <Input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
-                <Button className="add-group-button" onClick={addGroup(token, addToGroups)}>
-                    +
-                </Button>
+                <div className="plus-icon" onClick={addGroup(token, addToGroups)}/>
             </div>
             <div className="form-container groups-content">
                 {selectedGroup !== undefined && (
@@ -88,12 +101,12 @@ const Groups = ({user, groups, token, selectedGroup, modalAddMemberVisible, moda
                             <div className="group-input">
                                 <span className="group-input__item">Login</span>
                                 <Input className="group-input__item" type="text" />
-                                <Button className="group-input__item">Show</Button>
+                                <Button className="group-input__item" onClick={() => {}}>Show</Button>
                             </div>
                             <div className="group-input">
                                 <span className="group-input__item">Password</span>
-                                <Input className="group-input__item" type="password" />
-                                <Button className="group-input__item">Show</Button>
+                                <Input className="group-input__item" type="password" disabled />
+                                <Button className="group-input__item" onClick={() => {}}>Show</Button>
                             </div>
                         </div>
                         <div className="group-users">

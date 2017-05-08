@@ -40,6 +40,13 @@ export const addGroup = (xAuthToken, name) => getJsonData(
     })
 );
 
+export const getGroup = (xAuthToken, groupId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}`, {
+        method: "GET",
+        headers: prepareHeaders(xAuthToken)
+    })
+);
+
 export const deleteGroup = (xAuthToken, id) => getJsonData(
     fetch(`${origin}/auth/group/${id}`, {
         method: "DELETE",

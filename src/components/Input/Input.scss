@@ -5,3 +5,9 @@
   width: 150px;
   height: 24px;
 }
+
+
+.disabled-input {
+  background-color: lighten(rgb(251,147,34), 18%);
+  cursor: not-allowed;
+}
