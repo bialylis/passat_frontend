@@ -8,7 +8,6 @@ const loginUser = (loggedIn, setGroups, error) => () => {
     const username = document.getElementById('username-input-login').value;
     const password = document.getElementById('password-input-login').value;
     restLoginUser(username, password).then((jsonData) => {
-        console.log(jsonData);
         if(jsonData.token){
             loggedIn(jsonData.user, jsonData.token);
             fetchGroups(jsonData.token, setGroups);
@@ -20,7 +19,6 @@ const loginUser = (loggedIn, setGroups, error) => () => {
 
 const fetchGroups = (token, setGroups) => {
     restFetchGroups(token).then((jsonData) => {
-        console.log(jsonData);
         setGroups(jsonData);
     });
 };

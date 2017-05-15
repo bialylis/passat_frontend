@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import Groups from '../../components/Groups';
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return state;
 };
 
@@ -30,6 +29,15 @@ const mapDispatchToProps = (dispatch) => ({
     },
     hideRemoveMemberModal: () => {
         dispatch({type: 'HIDE_MODAL_REMOVE_MEMBER'})
+    },
+    addGroupPassword: () => {
+        dispatch({type: 'ADD_GROUP_PASSWORD'})
+    },
+    switchToMainGroupPanel: () => {
+        dispatch({type: 'SWICH_TO_MAIN_GROUP_PANEL'})
+    },
+    groupSettings: () => {
+        dispatch({type: 'GROUP_SETTINGS'})
     }
 });
 

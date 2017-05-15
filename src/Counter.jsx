@@ -33,7 +33,6 @@ class Counter extends React.Component {
               Accept: 'application/json',
             },
           }).then((response) => {
-            console.log(response);
             return response.json();
           }).then((jsonData) => {
             this.setState({ dataResponse: jsonData.anObject.item2 });

@@ -54,10 +54,13 @@ export const deleteGroup = (xAuthToken, id) => getJsonData(
     })
 );
 
-export const addMemberToGroup = (xAuthToken, groupId, userId) => getJsonData(
-    fetch(`${origin}/auth/group/${groupId}/${userId}`, {
+export const addMemberToGroup = (xAuthToken, groupId, email) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/member`, {
         method: "POST",
-        headers: prepareHeaders(xAuthToken)
+        headers: prepareHeaders(xAuthToken),
+        body: JSON.stringify({
+            invited_email: email
+        })
     })
 );
 
