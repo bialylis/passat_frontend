@@ -43,9 +43,14 @@ const deleteGroup = (token, selectedGroup, deleteFromGroups) => () => {
     })
 };
 
-const addMember = (token, selectedGroup, hideModal) => () => {
+const addMember = (token, selectedGroup, hideModal, error) => () => {
     const userEmail = document.getElementById('input-modal-new-member-id').value;
-    restAddMemberToGroup(token, selectedGroup, userEmail).then(() => {
+    restAddMemberToGroup(token, selectedGroup, userEmail).then((response) => {
+        if(response.status === 400) {
+            error('Could not invite user');
+        } else {
+            error('Added member to group');
+        }
         hideModal();
     })
 };
@@ -57,7 +62,7 @@ const removeMember = (token, selectedGroup, hideModal) => () => {
     })
 };
 
-const Groups = ({groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings}) => (
+const Groups = ({info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings}) => (
     <div>
         <div className="login__header">
             <div className="logo">
@@ -65,6 +70,7 @@ const Groups = ({groupFlow, user, groups, token, selectedGroup, modalAddMemberVi
                 {user.username}
             </div>
             <span className="logo-side" />
+            <span className="font24">{info}</span>
             <div className="info__logout">
                 <div className="logout-container">
                     <Button className="login-button content" onClick={logOut}>Logout</Button>
@@ -209,7 +215,7 @@ const Groups = ({groupFlow, user, groups, token, selectedGroup, modalAddMemberVi
                                     <textarea className="input-textarea"/>
                                     <div className="add-group-pass-buttons-container">
                                         <Button className="button add-group-pass-button" onClick={switchToMainGroupPanel}>Cancel</Button>
-                                        <Button className="button add-group-pass-button" onClick={switchToMainGroupPanel}>Add</Button>
+                                        <Button className="button add-group-pass-button" onClick={() => {switchToMainGroupPanel(); error('Add passwrod - to be implemented');}}>Add</Button>
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +245,7 @@ const Groups = ({groupFlow, user, groups, token, selectedGroup, modalAddMemberVi
                             </div>
                             <div className="add-group-pass-buttons-container">
                                 <Button className="button add-group-pass-button" onClick={switchToMainGroupPanel}>Cancel</Button>
-                                <Button className="button add-group-pass-button" onClick={switchToMainGroupPanel}>Accept</Button>
+                                <Button className="button add-group-pass-button" onClick={() => {switchToMainGroupPanel(); error('Edit group - to be implemented');}}>Accept</Button>
                             </div>
                         </div>
 
@@ -251,7 +257,7 @@ const Groups = ({groupFlow, user, groups, token, selectedGroup, modalAddMemberVi
             <Modal title="Enter user email">
                 <Input type="text" id="input-modal-new-member-id"/>
                 <div className="modal-buttons">
-                    <Button className="margin-top button-wide" onClick={addMember(token, selectedGroup, hideAddMemberModal)}>
+                    <Button className="margin-top button-wide" onClick={addMember(token, selectedGroup, hideAddMemberModal, error)}>
                         Add member
                     </Button>
                     <Button className="margin-top button-wide" onClick={hideAddMemberModal}>

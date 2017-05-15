@@ -17,9 +17,9 @@ const registerUser = (logIn, error, newInfo) => () => {
     });
 };
 
-const Register = ({logIn, error, newInfo}) => (
+const Register = ({logIn, error, newInfo, info}) => (
     <div className="login">
-        <Header>pass@</Header>
+        <Header info={info}>pass@</Header>
         <div className="login__content">
             <div className="login__navbar">
             </div>

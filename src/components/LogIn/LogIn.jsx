@@ -23,9 +23,9 @@ const fetchGroups = (token, setGroups) => {
     });
 };
 
-const LogIn = ({ signUp, loggedIn, error, setGroups }) => (
+const LogIn = ({ signUp, loggedIn, error, setGroups, info }) => (
     <div className="login">
-        <Header>pass@</Header>
+        <Header info={info}>pass@</Header>
         <div className="login__content">
             <div className="login__navbar">
             </div>
@@ -48,7 +48,7 @@ const LogIn = ({ signUp, loggedIn, error, setGroups }) => (
                         <Input type="password" className="input-field" id="password-input-login"/>
                     </div>
                     <Button className="login-button" onClick={loginUser(loggedIn, setGroups, error)}>Log in</Button>
-                    <a onClick={() => console.log('Forgot pass')}><i>Forgot password</i></a>
+                    <a onClick={() => error('Forgot password - to be implemented')}><i>Forgot password</i></a>
                 </div>
             </div>
         </div>

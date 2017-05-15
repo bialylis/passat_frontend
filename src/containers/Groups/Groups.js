@@ -38,7 +38,11 @@ const mapDispatchToProps = (dispatch) => ({
     },
     groupSettings: () => {
         dispatch({type: 'GROUP_SETTINGS'})
+    },
+    error: (message) => {
+        dispatch({type: 'ERROR', message})
     }
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Groups);
