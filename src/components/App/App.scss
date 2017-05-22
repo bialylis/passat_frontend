@@ -359,6 +359,10 @@ body {
   display: flex;
   justify-content: center;
   font-size: 24px;
+
+  &--passwords {
+    margin-top: 24px;
+  }
 }
 
 .group-main-view-button {
@@ -454,4 +458,14 @@ body {
 .col-10 {
   min-width: 40px;
   width: 10%;
+}
+
+.back-button-container {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.margin-bottom {
+  margin-bottom: 18px;
 }

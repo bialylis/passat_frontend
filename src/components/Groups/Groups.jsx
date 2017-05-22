@@ -263,26 +263,33 @@ const Groups = ({setGroupData, toBeRemovedId, groupData, info, error, groupFlow,
                             <div>
                                 {getSelectedGroupName(groups, selectedGroup)} - Shared passwords
                             </div>
-                            <div className="button-group">
-                                <Button className="margin-right" onClick={deleteGroup(token, selectedGroup, deleteFromGroups)}>Delete group</Button>
-                            </div>
                         </div>
                         <div className="group-form">
                             <div className="group-input">
-                                <span className="group-input__item">Group name</span>
-                                <Input className="group-input__item wide200" type="text" placeholder={getSelectedGroupName(groups, selectedGroup)} />
-                            </div>
-                            <div className="group-input">
                                 <span className="group-input__item">Secret password</span>
-                                <Input className="group-input__item wide200" type="password" disabled />
-                                <Button className="group-input__item" onClick={() => {console.log('to be implemented')}}>Generate</Button>
+                                <Input className="group-input__item wide200" type="password" />
+                                <Button className="group-input__item" onClick={() => {console.log('to be implemented')}}>Submit</Button>
+                                <div className="back-button-container">
+                                    <Button className="group-input__item" onClick={switchToMainGroupPanel}>Back</Button>
+                                </div>
                             </div>
-                            <div className="add-group-pass-buttons-container">
-                                <Button className="button add-group-pass-button" onClick={switchToMainGroupPanel}>Cancel</Button>
-                                <Button className="button add-group-pass-button" onClick={() => {switchToMainGroupPanel(); error('Edit group - to be implemented');}}>Accept</Button>
+                            <strong className="users-table-header users-table-header--passwords margin-bottom">Group Passwords - Admin: {groupData.username}</strong>
+                            <div className="group-input margin-top">
+                                <span className="group-input__item">Facebook</span>
+                                <Input className="group-input__item wide200" type="password" disabled/>
+                                <Button className="group-input__item" onClick={() => {console.log('to be implemented')}}>Show</Button>
+                            </div>
+                            <div className="group-input margin-top">
+                                <span className="group-input__item">Gmail</span>
+                                <Input className="group-input__item wide200" type="password" disabled/>
+                                <Button className="group-input__item" onClick={() => {console.log('to be implemented')}}>Show</Button>
+                            </div>
+                            <div className="group-input margin-top">
+                                <span className="group-input__item">Jira</span>
+                                <Input className="group-input__item wide200" type="password" disabled/>
+                                <Button className="group-input__item" onClick={() => {console.log('to be implemented')}}>Show</Button>
                             </div>
                         </div>
-
                     </div>
                 )}
             </div>
