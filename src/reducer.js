@@ -78,7 +78,8 @@ const appReducer = (state = {}, action) => {
         case 'SHOW_MODAL_REMOVE_MEMBER':
             return {
                 ...state,
-                modalRemoveMemberVisible: true
+                modalRemoveMemberVisible: true,
+                toBeRemovedId: action.id
             };
         case 'HIDE_MODAL_REMOVE_MEMBER':
             return {
@@ -99,6 +100,16 @@ const appReducer = (state = {}, action) => {
             return {
                 ...state,
                 groupFlow: 3
+            };
+        case 'SET_GROUP_DATA':
+            return {
+                ...state,
+                groupData: action.data
+            };
+        case 'GROUP_PASSWORDS':
+            return {
+              ...state,
+                groupFlow: 4
             };
     default:
       return state

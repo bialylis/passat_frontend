@@ -24,8 +24,8 @@ const mapDispatchToProps = (dispatch) => ({
     hideAddMemberModal: () => {
         dispatch({type: 'HIDE_MODAL_ADD_MEMBER'})
     },
-    showRemoveMemberModal: () => {
-        dispatch({type: 'SHOW_MODAL_REMOVE_MEMBER'})
+    showRemoveMemberModal: (id) => () => {
+        dispatch({type: 'SHOW_MODAL_REMOVE_MEMBER', id})
     },
     hideRemoveMemberModal: () => {
         dispatch({type: 'HIDE_MODAL_REMOVE_MEMBER'})
@@ -41,8 +41,13 @@ const mapDispatchToProps = (dispatch) => ({
     },
     error: (message) => {
         dispatch({type: 'ERROR', message})
+    },
+    setGroupData: (data) => {
+        dispatch({type: 'SET_GROUP_DATA', data})
+    },
+    groupPasswords: () => {
+        dispatch({type: "GROUP_PASSWORDS"});
     }
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Groups);

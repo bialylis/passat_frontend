@@ -65,7 +65,7 @@ export const addMemberToGroup = (xAuthToken, groupId, email) => getJsonData(
 );
 
 export const removeMemberFromGroup = (xAuthToken, groupId, userId) => getJsonData(
-    fetch(`${origin}/auth/group/${groupId}/${userId}`, {
+    fetch(`${origin}/auth/group/${groupId}/member/${userId}`, {
         method: "DELETE",
         headers: prepareHeaders(xAuthToken)
     })
