@@ -144,7 +144,7 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
 
 const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
     <div>
-        {console.log(encodedGroupPasswords)}
+        {console.log(user)}
         <div className="login__header">
             <div className="logo">
                 <img className="img-medium" src={UserIcon} />
