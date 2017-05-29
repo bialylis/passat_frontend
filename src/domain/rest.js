@@ -71,7 +71,7 @@ export const removeMemberFromGroup = (xAuthToken, groupId, userId) => getJsonDat
     })
 );
 
-export const getUserPublicKey = (xAuthToken, userId) => getJsonData(
+export const getUserPublicKey = (xAuthToken, userId) => getRawData(
     fetch(`${origin}/auth/crypto/public/${userId}`, {
         method: "GET",
         headers: prepareHeaders(xAuthToken)
@@ -120,3 +120,4 @@ const prepareHeaders = (xAuthToken) => {
 };
 
 const getJsonData = jsonPromise => jsonPromise.then((response) => response.json());
+const getRawData = promise => promise.then((response) => response);
