@@ -124,6 +124,9 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     const userKeys = [];
     groupData.userList.forEach(u => {
         restGetUserPublicKey(token, u.user_id).then((jsonData => {
+
+            console.log(jsonData)
+
             if(jsonData.status === 400) {
                 error('Cannot find user public key');
             } else {
