@@ -47,6 +47,18 @@ const mapDispatchToProps = (dispatch) => ({
     },
     groupPasswords: () => {
         dispatch({type: "GROUP_PASSWORDS"});
+    },
+    showPasswordModal: (pickedPassToShow) => () => {
+        dispatch({type: "SHOW_MODAL_SHOW_PASSWORD", pickedPassToShow})
+    },
+    hidePasswordModal: () => {
+        dispatch({type: "HIDE_MODAL_SHOW_PASSWORD"})
+    },
+    setGroupPasswords: (data) => {
+        dispatch({type: "SET_GROUP_PASSWORDS", data})
+    },
+    addDecryptedPassToStore: (index, decryptedPass) => {
+        dispatch({type: "ADD_DECRYPTED_PASS", index, decryptedPass})
     }
 });
 

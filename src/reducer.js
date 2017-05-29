@@ -44,7 +44,9 @@ const appReducer = (state = {}, action) => {
             return {
                 ...state,
                 selectedGroup: action.id,
-                info: `Picked group with id ${action.id}`
+                info: `Picked group with id ${action.id}`,
+                groupFlow: 1,
+                encodedGroupPasswords: []
             };
         case 'ADD_GROUP':
             let newGroups = null;
@@ -94,7 +96,8 @@ const appReducer = (state = {}, action) => {
         case 'SWICH_TO_MAIN_GROUP_PANEL':
             return {
                 ...state,
-                groupFlow: 1
+                groupFlow: 1,
+                encodedGroupPasswords: []
             };
         case 'GROUP_SETTINGS':
             return {
@@ -111,6 +114,30 @@ const appReducer = (state = {}, action) => {
               ...state,
                 groupFlow: 4
             };
+        case 'SHOW_MODAL_SHOW_PASSWORD':
+            return {
+                ...state,
+                modalShowPasswordVisible: true,
+                pickedPassToShow: action.pickedPassToShow
+            };
+        case 'HIDE_MODAL_SHOW_PASSWORD':
+            return {
+                ...state,
+                modalShowPasswordVisible: false
+            };
+        case 'SET_GROUP_PASSWORDS':
+            return {
+                ...state,
+                encodedGroupPasswords: action.data
+            };
+        case 'ADD_DECRYPTED_PASS': {
+            const newPasses = state.encodedGroupPasswords;
+            newPasses[action.index].decryptedPass = action.decryptedPass;
+            return {
+                ...state,
+                encodedGroupPasswords: newPasses
+            };
+        }
     default:
       return state
   }

@@ -71,6 +71,45 @@ export const removeMemberFromGroup = (xAuthToken, groupId, userId) => getJsonDat
     })
 );
 
+export const getUserPublicKey = (xAuthToken, userId) => getJsonData(
+    fetch(`${origin}/auth/crypto/public/${userId}`, {
+        method: "GET",
+        headers: prepareHeaders(xAuthToken)
+    })
+);
+
+export const generateKeys = (xAuthToken, encryption_pass) => getJsonData(
+    fetch(`${origin}/auth/crypto`, {
+        method: "POST",
+        headers: prepareHeaders(xAuthToken),
+        body: JSON.stringify({
+            encryption_pass
+        })
+    })
+);
+
+export const getGroupPasswords = (xAuthToken, groupId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/password`, {
+        method: "GET",
+        headers: prepareHeaders(xAuthToken)
+    })
+);
+
+export const addGroupPasswordForUser = (xAuthToken, groupId, group, user, name, login, pass, note) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/password`, {
+        method: "GET",
+        headers: prepareHeaders(xAuthToken),
+        body: JSON.stringify({
+            group,
+            user,
+            pass_name: name,
+            encrypted_login: login,
+            encrypted_password: pass,
+            note
+        })
+    })
+);
+
 const prepareHeaders = (xAuthToken) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');

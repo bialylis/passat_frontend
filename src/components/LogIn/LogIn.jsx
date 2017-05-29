@@ -1,10 +1,10 @@
 import React from 'react';
-import { loginUser as restLoginUser , fetchGroups as restFetchGroups } from '../../domain/rest';
+import { loginUser as restLoginUser , fetchGroups as restFetchGroups, getUserPublicKey as restGetUserPublicKey } from '../../domain/rest';
 import Header from '../Header';
 import Button from '../Button';
 import Input from '../Input';
 
-const loginUser = (loggedIn, setGroups, error) => () => {
+const loginUser = (loggedIn, setGroups, error, showModalForPrivateKeyPass) => () => {
     const username = document.getElementById('username-input-login').value;
     const password = document.getElementById('password-input-login').value;
     restLoginUser(username, password).then((jsonData) => {
