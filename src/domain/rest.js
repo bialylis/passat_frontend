@@ -120,4 +120,4 @@ const prepareHeaders = (xAuthToken) => {
 };
 
 const getJsonData = jsonPromise => jsonPromise.then((response) => response.json());
-const getRawData = promise => promise.then((response) => response.body..read());
+const getRawData = promise => promise.then((response) => response.body.read();
