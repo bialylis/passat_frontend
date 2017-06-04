@@ -97,7 +97,7 @@ export const getGroupPasswords = (xAuthToken, groupId) => getJsonData(
 
 export const addGroupPasswordForUser = (xAuthToken, groupId, group, user, name, login, pass, note) => getJsonData(
     fetch(`${origin}/auth/group/${groupId}/password`, {
-        method: "GET",
+        method: "POST",
         headers: prepareHeaders(xAuthToken),
         body: JSON.stringify({
             group,

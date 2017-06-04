@@ -123,20 +123,23 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     const note = document.getElementById('add-pass-desc').value;
     const userKeys = [];
     groupData.userList.forEach(u => {
-        restGetUserPublicKey(token, u.user_id).then((jsonData => {
+        restGetUserPublicKey(token, u.user_id).then((rawData => {
 
-            console.log(jsonData)
+            console.log(rawData, 'data');
+            const key = ursa.createPublicKey(pem);
+            const encripted = key.encrypt(data, 'utf8', 'base64');
+            console.log(encripted, ' crypted');
 
             if(jsonData.status === 400) {
                 error('Cannot find user public key');
             } else {
-                restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
+                /*restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
                     if(response.status === 400) {
                         error('Could not add password');
                     } else {
                         error('Added password');
                     }
-                });
+                });*/
             }
         }))
     });
