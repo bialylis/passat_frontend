@@ -1,5 +1,4 @@
 import React from 'react';
-import { createPublicKey } from 'ursa';
 import { map, find, uniqBy } from 'lodash';
 import {
     addGroup as restAddGroup,
@@ -126,10 +125,7 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     groupData.userList.forEach(u => {
         restGetUserPublicKey(token, u.user_id).then((rawData => {
 
-            console.log(rawData, 'data');
-            const key = createPublicKey(pem);
-            const encripted = key.encrypt(data, 'utf8', 'base64');
-            console.log(encripted, ' crypted');
+            console.log(rawData, 'data');/*
 
             if(jsonData.status === 400) {
                 error('Cannot find user public key');
