@@ -9,20 +9,28 @@ import {
     getUserPublicKey as restGetUserPublicKey,
     addGroupPasswordForUser as restAddGroupPasswordForUser,
     generateKeys as restGenerateKeys,
-    getGroupPasswords as restGetGroupPasswords
+    getGroupPasswords as restGetGroupPasswords,
+    getGroupPassword as restGetGroupPassword
 } from '../../domain/rest';
 import Button from '../Button';
 import Input from '../Input';
 import Modal from '../Modal';
 import UserIcon from '../../icons/user-icon.png';
 
-const decryptPass = (pickedPassToShow, addDecryptedPassToStore, hidePasswordModal) => () => {
-    const privateKeyPassword = document.getElementById('input-modal-decode-password').value;
-    //TODO decrypt private Key
-    //TODO decrypt hashed Pass with private key
-    const decryptedPass = 'dfgdsf93[5asf][';
+const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToStore, error, hidePasswordModal) => () => {
+    //const privateKeyPassword = document.getElementById('input-modal-decode-password').value;
+    restGetGroupPassword(token, selectedGroup, pickedPassToShow).then(jsonData => {
+        if(jsonData.status === 400) {
+            error('Could not get password');
+        } else {
+            error('Fetched password');
+            addDecryptedPassToStore(pickedPassToShow, jsonData);
+        }
+        hidePasswordModal();
+    });
+    /*const decryptedPass = 'dfgdsf93[5asf][';
     addDecryptedPassToStore(pickedPassToShow, decryptedPass);
-    hidePasswordModal();
+    hidePasswordModal();*/
 };
 
 const getGroup = (selectGroup, setGroupData, token, groupId) => () => {
@@ -70,11 +78,7 @@ const getGroupPasswords = (token, setGroupPasswords, selectedGroup, error) => {
         } else {
             console.log('passwords');
             error('Fetched passwords for group');
-            setGroupPasswords([
-                {name: 'Jira', login: 'jiracomp', pass: 'asdf234dgsa'},
-                {name: 'Facebook', login: 'fblogin', pass: 'asdf234dgsa'},
-                {name: 'Gmail', login: 'maillogin', pass: 'asdf234dgsa'},
-            ]);
+            setGroupPasswords(jsonData);
         }
     })
 };
@@ -121,30 +125,26 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     const login = document.getElementById('add-pass-login').value;
     const pass = document.getElementById('add-pass-pass').value;
     const note = document.getElementById('add-pass-desc').value;
-    const userKeys = [];
     groupData.userList.forEach(u => {
-        restGetUserPublicKey(token, u.user_id).then((rawData => {
-
-            console.log(rawData, 'data');/*
-
-            if(jsonData.status === 400) {
-                error('Cannot find user public key');
+        restAddGroupPasswordForUser(token, groupId, groupData, u, name, login, pass, note).then(response => {
+            if(response.status === 400) {
+                error('Could not add password');
             } else {
-                /*restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
-                    if(response.status === 400) {
-                        error('Could not add password');
-                    } else {
-                        error('Added password');
-                    }
-                });*/
+                error('Added password');
             }
-        }))
+        });
     });
+/*    restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
+        if(response.status === 400) {
+            error('Could not add password');
+        } else {
+            error('Added password');
+        }
+    });*/
 };
 
 const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
     <div>
-        {console.log(user)}
         <div className="login__header">
             <div className="logo">
                 <img className="img-medium" src={UserIcon} />
@@ -194,8 +194,9 @@ const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPassword
                                 <table className="users-table">
                                     <thead>
                                     <tr className="table-header">
-                                        <th className="col-45">Username</th>
-                                        <th className="col-45">Access</th>
+                                        <th className="col-40">Username</th>
+                                        <th className="col-40">Access</th>
+                                        <th className="col-10" />
                                         <th className="col-10" />
                                     </tr>
                                     </thead>
@@ -204,6 +205,7 @@ const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPassword
                                             <tr key={u.user_id}>
                                                 <td>{u.username}</td>
                                                 <td>User</td>
+                                                <td><Button>Reset</Button></td>
                                                 <td>{groupData.username === user.username && <div className="remove-icon" onClick={showRemoveMemberModal(u.user_id)}/>}</td>
                                             </tr>
                                     )))}
@@ -212,9 +214,13 @@ const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPassword
                             </div>
                             <div className="buttons-col">
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={addGroupPassword}>Add password</Button>}
+{/*
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={groupSettings}>Group settings</Button>}
+*/}
                                 <Button className="button group-main-view-button" onClick={() => {groupPasswords(); getGroupPasswords(token, setGroupPasswords, selectedGroup, error)}}>Passwords</Button>
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={showAddMemberModal}>Add member</Button>}
+                                <Button className="button group-main-view-button" onClick={() => {console.log('Refreshing passwords')}}>Reset all passwords</Button>
+
                             </div>
                         </div>
                     </div>
@@ -303,10 +309,11 @@ const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPassword
                             <strong className="users-table-header users-table-header--passwords margin-bottom">Group Passwords - Admin: {groupData.username}</strong>
                             {encodedGroupPasswords.map((e, index) => (
                                 <div key={index} className="group-input margin-top">
-                                    <span className="group-input__item">{e.name}:</span>
-                                    <span className="group-input__item">{e.login}</span>
-                                    <Input className="group-input__item wide200" type="text" value={e.decryptedPass} disabled/>
-                                    <Button className="group-input__item" onClick={showPasswordModal(index)}>Show</Button>
+                                    <span className="group-input__item">{e.pass_name}:</span>
+                                    <Input className="group-input__item wide200" type="text" value={e.login || 'Login'} disabled/>
+                                    <Input className="group-input__item wide200" type="text" value={e.password || 'Password'} disabled/>
+                                    <Button className="group-input__item" onClick={() => {decryptPass(e.pass_id, token, selectedGroup, addDecryptedPassToStore, error, hidePasswordModal)()}}>Show</Button>
+                                    {e.note && <Button className="group-input__item" onClick={showPasswordModal(e.pass_id)}>Pass note</Button>}
                                 </div>
                             ))}
                             {/*<div className="group-input margin-top">
@@ -359,12 +366,17 @@ const Groups = ({addDecryptedPassToStore, pickedPassToShow, encodedGroupPassword
             </Modal>
         )}
         {modalShowPasswordVisible && (
-            <Modal title="Enter your private key password?">
-                <Input type="password" id="input-modal-decode-password"/>
+            <Modal title='Password information'>
+                <div className="pass-note">
+                    {encodedGroupPasswords.map(p => {
+                        if (p.pass_id == pickedPassToShow) {
+                            return p.note;
+                        } else {
+                            return '';
+                        }
+                    })}
+                </div>
                 <div className="modal-buttons">
-                    <Button className="margin-top button-wide" onClick={decryptPass(pickedPassToShow, addDecryptedPassToStore, hidePasswordModal)}>
-                        Encode password
-                    </Button>
                     <Button className="margin-top button-wide" onClick={hidePasswordModal}>
                         Cancel
                     </Button>

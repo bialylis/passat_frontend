@@ -131,11 +131,17 @@ const appReducer = (state = {}, action) => {
                 encodedGroupPasswords: action.data
             };
         case 'ADD_DECRYPTED_PASS': {
-            const newPasses = state.encodedGroupPasswords;
-            newPasses[action.index].decryptedPass = action.decryptedPass;
+            const newPasses = state.encodedGroupPasswords || [];
+            const newerPasses = newPasses.map(p => {
+               if(p.pass_id == action.index){
+                   return action.data;
+               } else {
+                   return p
+               }
+            });
             return {
                 ...state,
-                encodedGroupPasswords: newPasses
+                encodedGroupPasswords: newerPasses
             };
         }
     default:

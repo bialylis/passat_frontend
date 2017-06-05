@@ -57,8 +57,8 @@ const mapDispatchToProps = (dispatch) => ({
     setGroupPasswords: (data) => {
         dispatch({type: "SET_GROUP_PASSWORDS", data})
     },
-    addDecryptedPassToStore: (index, decryptedPass) => {
-        dispatch({type: "ADD_DECRYPTED_PASS", index, decryptedPass})
+    addDecryptedPassToStore: (index, data) => {
+        dispatch({type: "ADD_DECRYPTED_PASS", index, data})
     }
 });
 
