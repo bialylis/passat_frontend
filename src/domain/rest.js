@@ -117,15 +117,10 @@ export const addGroupPasswordForUser = (xAuthToken, groupId, group, user, name, 
         })
     })
 );
-
-export const resetGroupPasswordsForUser = (xAuthToken, groupId, user) => getJsonData(
-    fetch(`${origin}/auth/group/${groupId}/password`, { //TODO ALTER ENDPOINT
-        method: "POST",
-        headers: prepareHeaders(xAuthToken),
-        body: JSON.stringify({
-            group,
-            user,
-        })
+export const deleteGroupPasswordsForUser = (xAuthToken, groupId, user) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/password/user/${user}`, {
+        method: "DELETE",
+        headers: prepareHeaders(xAuthToken)
     })
 );
 
@@ -136,7 +131,7 @@ export const deletePass = (xAuthToken, passId, groupId) => getJsonData(
     })
 );
 
-export const resetPassword = (username, password, resetKey) => getJsonData(
+/*export const resetPassword = (username, password, resetKey) => getJsonData(
     fetch(`${origin}/auth/group/${groupId}/password`, { //TODO ALTER ENDPOINT
         method: "POST",
         headers: prepareHeaders()
@@ -148,7 +143,7 @@ export const sendResetEmail = (username) => getJsonData(
         method: "POST",
         headers: prepareHeaders()
     })
-);
+);*/
 
 const prepareHeaders = (xAuthToken, privateKeyPassword) => {
     const headers = new Headers();

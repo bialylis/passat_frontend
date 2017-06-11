@@ -72,6 +72,15 @@ const mapDispatchToProps = (dispatch) => ({
     hideModalDecryptPassword: () => {
         dispatch({type: "HIDE_MODAL_DECRYPT_PASSWORD"})
     },
+    showModalResetDecryptPassword: (userId) => () => {
+        dispatch({type: "SHOW_MODAL_RESET_DECRYPT_PASSWORD", userToReset: userId})
+    },
+    hideModalResetDecryptPassword: () => {
+        dispatch({type: "HIDE_MODAL_RESET_DECRYPT_PASSWORD"})
+    },
+    removePassword: (passId) => {
+        dispatch({type: "REMOVE_PASSWORD", passId})
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Groups);

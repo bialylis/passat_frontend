@@ -10,12 +10,12 @@ import Header from '../Header';
 import Button from '../Button';
 import Input from '../Input';
 
-const resetPassword = (setLoginFlow, error) => () => {
+/*const resetPassword = (setLoginFlow, error) => () => {
     const username = document.getElementById('username-input-reset').value;
     const password1 = document.getElementById('password1-input-reset').value;
     const password2 = document.getElementById('password2-input-reset').value;
     const resetKey = document.getElementById('key-input-reset').value;
-    /*if(password1 === password2 && username.trim() !== '' && password1.trim() !== '') {
+    /!*if(password1 === password2 && username.trim() !== '' && password1.trim() !== '') {
         restResetPassword(usename, password1, resetKey).then(response => {
             if(response.status === 400) {
                 error('Error during password reset occured');
@@ -24,9 +24,9 @@ const resetPassword = (setLoginFlow, error) => () => {
                 setLoginFlow();
             }
         })
-    }*/
+    }*!/
     error('Password reset successfully');
-};
+};*/
 
 const sendResetEmail = (setLoginFlow, error) => () => {
     const username = document.getElementById('username-input-forgot').value;
@@ -76,13 +76,13 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                             <Button className="margin-right" onClick={signUp}>
                             Sign up
                             </Button>
-                            <Button onClick={setResetFlow}>
-                            Reset password
-                            </Button>
+                            {/*<Button onClick={setResetFlow}>
+                         Reset password
+                         </Button>*/}
                         </div>
                     </div>
                 }
-                {forgotFlow &&
+                {/*{forgotFlow &&
                 <div className="login__signup">
                     <span className="basic-flex">Forgot password</span>
                     <div className="basic-flex">
@@ -100,7 +100,7 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                             Back
                         </Button>
                     </div>
-                </div>
+                </div>*/}
                 }
                 {loginFlow &&
                     <div className="login__inputs">
@@ -113,10 +113,12 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                             <Input type="password" className="input-field" id="password-input-login"/>
                         </div>
                         <Button className="login-button" onClick={loginUser(loggedIn, setGroups, error)}>Log in</Button>
+{/*
                         <a onClick={setForgotFlow}><i>Forgot password</i></a>
+*/}
                     </div>
                 }
-                {forgotFlow &&
+                {/*{forgotFlow &&
                 <div className="login__inputs">
                     <div className="labeled-input">
                         <label className="login__label">Username</label>
@@ -149,7 +151,7 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                         Reset password
                     </Button>
                 </div>
-                }
+                }*/}
 
             </div>
         </div>

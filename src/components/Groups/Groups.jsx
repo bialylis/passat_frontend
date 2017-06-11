@@ -11,7 +11,7 @@ import {
     generateKeys as restGenerateKeys,
     getGroupPasswords as restGetGroupPasswords,
     getGroupPassword as restGetGroupPassword,
-    resetGroupPasswordsForUser as restResetGroupPasswordsForUser,
+    deleteGroupPasswordsForUser as restDeleteGroupPasswordsForUser,
     deletePass as restDeletePass
 } from '../../domain/rest';
 import Button from '../Button';
@@ -37,13 +37,13 @@ const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToS
     hidePasswordModal();*/
 };
 
-const deletePass = (passId, token, selectedGroup, error, setGroupPasswords) => () => {
+const deletePass = (passId, token, selectedGroup, error, setGroupPasswords, removePassword) => () => {
     /*restDeletePass(token, passId, selectedGroup).then(jsonData => {
         if(jsonData.status === 400) {
             error('Could not deletePassword');
         } else {
             error('Deleted password');
-            getGroupPasswords(token, setGroupPasswords, selectedGroup, error);
+            removePassword(passId);
         }
     });*/
     error('Deleted password');
@@ -161,19 +161,47 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     });
 };
 
-const resetGroupPasswordsForUser = (token, groupId, user, error) => {
-    /*restResetGroupPasswordsForUser(token, groupId, user).then(response => {
-        if(response.status === 400) {
-            error('Error during password reset');
-        } else {
-            error('Passwords reset successfully')
+const resetGroupPasswordsForUser = (token, groupId, error, user, selectedGroup, setGroupPasswords, groupData, hideModalResetDecryptPassword) => {
+    const privateKeyPassword = document.getElementById('reset-decrypt-password-input').value;
+    restDeleteGroupPasswordsForUser(token, groupId, user).then(jsonData => {
+        if(jsonData.status === 400 || jsonData.status === 401){
+
+        }else{
+            //getting admin passwords
+            let passwords = [];
+            restGetGroupPasswords(token, selectedGroup).then(jsonData => {
+                if(jsonData.status === 400) {
+
+                } else {
+                    setGroupPasswords(jsonData);
+                    passwords = jsonData;
+                    hideModalResetDecryptPassword();
+                    passwords.forEach(p => {
+                        restGetGroupPassword(token, selectedGroup, p.pass_id, privateKeyPassword).then(jsonData2 => {
+                            if(jsonData2.status === 400) {
+                            } else if (jsonData2.status === 401) {
+                            } else {
+                                restAddGroupPasswordForUser(token, groupId, groupData, {user_id: user}, jsonData2.pass_name, jsonData2.login, jsonData2.password, jsonData2.note).then(response => {
+                                    if(response.status === 400) {
+                                        error('Could not add password');
+                                    } else {
+                                        error('Passwords are reset');
+                                    }
+                                });
+                            }
+                        });
+
+                    });
+
+                }
+            });
         }
-    });*/
-    error('Error during password reset');
+
+    });
 };
 
-const resetGroupPasswordsForAllUsers = (token, groupData, groupId, user, error) => {
-    /*groupData.userList.forEach(u => {
+/*const resetGroupPasswordsForAllUsers = (token, groupData, groupId, user, error) => {
+    /!*groupData.userList.forEach(u => {
         restResetGroupPasswordsForUser(token, groupId, u).then(response => {
             if (response.status === 400) {
                 error('Error during password reset');
@@ -188,11 +216,11 @@ const resetGroupPasswordsForAllUsers = (token, groupData, groupId, user, error) 
         } else {
             error('Passwords reset successfully')
         }
-    });*/
+    });*!/
     error('Error during password reset2');
-};
+};*/
 
-const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryptPassword, modalShowResetKeys, showResetKeysModal, hideResetKeysModal, addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
+const Groups = ({removePassword, userToReset, modalResetDecryptPassword, showModalResetDecryptPassword, hideModalResetDecryptPassword, modalDecryptPassword, showModalDecryptPassword, hideModalDecryptPassword, modalShowResetKeys, showResetKeysModal, hideResetKeysModal, addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
     <div>
         <div className="login__header">
             <div className="logo">
@@ -222,18 +250,18 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
                 </div>
             </div>
             <div className="form-container groups-content">
-                {(user.public_key === null || modalShowResetKeys) && <Modal title="Enter your new private key password.">
+                {(user.has_keys === false || modalShowResetKeys) && <Modal title="Enter your new private key password.">
                     <Input type="password" id="private-key-password"/>
                     <div className="modal-buttons">
                         <Button className="margin-top button-wide" onClick={generateKeys(token, logOut, error)}>
                             Set password
                         </Button>
-                        {!!user.public_key && <Button className="margin-top button-wide" onClick={hideResetKeysModal}>
+                        {!!user.has_keys && <Button className="margin-top button-wide" onClick={hideResetKeysModal}>
                             Cancel
                         </Button>}
                     </div>
                 </Modal>}
-                {selectedGroup !== undefined && user.public_key !== null &&  groupFlow === 1 &&(
+                {selectedGroup !== undefined && user.has_keys !== false &&  groupFlow === 1 &&(
                     <div className="group-info">
                         <div className="main-view-group-name">
                             <div>
@@ -257,7 +285,7 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
                                             <tr key={u.user_id}>
                                                 <td>{u.username}</td>
                                                 <td>User</td>
-                                                <td><Button onClick={() => resetGroupPasswordsForUser(token, selectedGroup, u.user_id, error)}>Reset</Button></td>
+                                                <td>{groupData.username === user.username && <Button onClick={showModalResetDecryptPassword(u.user_id)}>Reset</Button>}</td>
                                                 <td>{groupData.username === user.username && <div className="remove-icon" onClick={showRemoveMemberModal(u.user_id)}/>}</td>
                                             </tr>
                                     )))}
@@ -271,13 +299,15 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
 */}
                                 <Button className="button group-main-view-button" onClick={() => {groupPasswords(); getGroupPasswords(token, setGroupPasswords, selectedGroup, error)}}>Passwords</Button>
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={showAddMemberModal}>Add member</Button>}
+{/*
                                 <Button className="button group-main-view-button" onClick={() => {resetGroupPasswordsForAllUsers(token, groupData, selectedGroup, user, error)}}>Reset all passwords</Button>
+*/}
 
                             </div>
                         </div>
                     </div>
                 )}
-                {selectedGroup !== undefined  && user.public_key !== null && groupFlow === 2 && (
+                {selectedGroup !== undefined  && user.has_keys !== false && groupFlow === 2 && (
                     <div className="group-info">
                         <div className="main-view-group-name">
                             <div>
@@ -311,7 +341,7 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
 
                     </div>
                 )}
-                {selectedGroup !== undefined && user.public_key !== null && groupFlow === 3 && (
+                {selectedGroup !== undefined && user.has_keys !== false && groupFlow === 3 && (
                     <div className="group-info">
                         <div className="main-view-group-name">
                             <div>
@@ -339,7 +369,7 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
 
                     </div>
                 )}
-                {selectedGroup !== undefined && user.public_key !== null && groupFlow === 4 && (
+                {selectedGroup !== undefined && user.has_keys !== false && groupFlow === 4 && (
                     <div className="group-info">
                         <div className="main-view-group-name">
                             <div>
@@ -366,7 +396,7 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
                                     <Input className="group-input__item wide200" type="text" value={e.login || 'Login'} disabled/>
                                     <Input className="group-input__item wide200" type="text" value={e.password || 'Password'} disabled/>
                                     <Button className="group-input__item" onClick={showModalDecryptPassword(e.pass_id)}>Show</Button>
-                                    <Button className="group-input__item" onClick={() => {deletePass(e.pass_id, token, selectedGroup, error, setGroupPasswords)()}}>Delete</Button>
+                                    <Button className="group-input__item" onClick={() => {deletePass(e.pass_id, token, selectedGroup, error, setGroupPasswords, removePassword)()}}>Delete</Button>
                                     {e.note && <Button className="group-input__item" onClick={showPasswordModal(e.pass_id)}>Pass note</Button>}
                                 </div>
                             ))}
@@ -450,6 +480,22 @@ const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryp
                         Decrypt
                     </Button>
                     <Button className="margin-top button-wide" onClick={hideModalDecryptPassword}>
+                        Cancel
+                    </Button>
+                </div>
+            </Modal>
+        )}
+
+        {modalResetDecryptPassword && (
+            <Modal title='Enter decryption password'>
+                <div className="pass-note">
+                    <Input type="password" id="reset-decrypt-password-input" />
+                </div>
+                <div className="modal-buttons">
+                    <Button className="margin-top button-wide" onClick={() => resetGroupPasswordsForUser(token, selectedGroup, error, userToReset, selectedGroup, setGroupPasswords, groupData, hideModalResetDecryptPassword)}>
+                        Decrypt
+                    </Button>
+                    <Button className="margin-top button-wide" onClick={hideModalResetDecryptPassword}>
                         Cancel
                     </Button>
                 </div>

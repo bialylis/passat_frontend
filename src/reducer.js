@@ -187,7 +187,24 @@ const appReducer = (state = {loginFlow: true}, action) => {
                 ...state,
                 modalDecryptPassword: false
             };
-
+        case 'SHOW_MODAL_RESET_DECRYPT_PASSWORD':
+            return {
+                ...state,
+                modalResetDecryptPassword: true,
+                userToReset: action.userToReset
+            };
+        case 'HIDE_MODAL_RESET_DECRYPT_PASSWORD':
+            return {
+                ...state,
+                modalResetDecryptPassword: false
+            };
+        case 'REMOVE_PASSWORD':
+            const newPasses = state.encodedGroupPasswords || [];
+            const newerPasses = newPasses.filter(p => p.pass_id !== action.passId);
+            return {
+                ...state,
+                encodedGroupPasswords: newerPasses
+            };
     default:
       return state
   }
