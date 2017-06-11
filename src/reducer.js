@@ -176,6 +176,18 @@ const appReducer = (state = {loginFlow: true}, action) => {
                 resetFlow: false,
                 forgotFlow: false,
             };
+        case 'SHOW_MODAL_DECRYPT_PASSWORD':
+            return {
+                ...state,
+                modalDecryptPassword: true,
+                pickedPassToShow: action.pickedPassToShow
+            };
+        case 'HIDE_MODAL_DECRYPT_PASSWORD':
+            return {
+                ...state,
+                modalDecryptPassword: false
+            };
+
     default:
       return state
   }

@@ -19,16 +19,18 @@ import Input from '../Input';
 import Modal from '../Modal';
 import UserIcon from '../../icons/user-icon.png';
 
-const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToStore, error, hidePasswordModal) => () => {
-    //const privateKeyPassword = document.getElementById('input-modal-decode-password').value;
-    restGetGroupPassword(token, selectedGroup, pickedPassToShow).then(jsonData => {
+const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToStore, error, hideModalDecryptPassword) => () => {
+    const privateKeyPassword = document.getElementById('decrypt-password-input').value;
+    restGetGroupPassword(token, selectedGroup, pickedPassToShow, privateKeyPassword).then(jsonData => {
         if(jsonData.status === 400) {
             error('Could not get password');
+        } else if (jsonData.status === 401) {
+            error('User unauthorized');
         } else {
-            error('Fetched password');
-            addDecryptedPassToStore(pickedPassToShow, jsonData);
+                error('Fetched password');
+                addDecryptedPassToStore(pickedPassToShow, jsonData);
         }
-        hidePasswordModal();
+        hideModalDecryptPassword();
     });
     /*const decryptedPass = 'dfgdsf93[5asf][';
     addDecryptedPassToStore(pickedPassToShow, decryptedPass);
@@ -190,7 +192,7 @@ const resetGroupPasswordsForAllUsers = (token, groupData, groupId, user, error) 
     error('Error during password reset2');
 };
 
-const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
+const Groups = ({modalDecryptPassword, showModalDecryptPassword, hideModalDecryptPassword, modalShowResetKeys, showResetKeysModal, hideResetKeysModal, addDecryptedPassToStore, pickedPassToShow, encodedGroupPasswords = [], modalShowPasswordVisible, showPasswordModal, hidePasswordModal, setGroupData, toBeRemovedId, groupData, info, error, groupFlow, user, groups, token, selectedGroup, modalAddMemberVisible, modalRemoveMemberVisible, logOut, selectGroup, addToGroups, deleteFromGroups, showAddMemberModal, hideAddMemberModal, showRemoveMemberModal, hideRemoveMemberModal, addGroupPassword, switchToMainGroupPanel, groupSettings, groupPasswords, setGroupPasswords}) => (
     <div>
         <div className="login__header">
             <div className="logo">
@@ -363,7 +365,7 @@ const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, add
                                     <span className="group-input__item">{e.pass_name}:</span>
                                     <Input className="group-input__item wide200" type="text" value={e.login || 'Login'} disabled/>
                                     <Input className="group-input__item wide200" type="text" value={e.password || 'Password'} disabled/>
-                                    <Button className="group-input__item" onClick={() => {decryptPass(e.pass_id, token, selectedGroup, addDecryptedPassToStore, error, hidePasswordModal)()}}>Show</Button>
+                                    <Button className="group-input__item" onClick={showModalDecryptPassword(e.pass_id)}>Show</Button>
                                     <Button className="group-input__item" onClick={() => {deletePass(e.pass_id, token, selectedGroup, error, setGroupPasswords)()}}>Delete</Button>
                                     {e.note && <Button className="group-input__item" onClick={showPasswordModal(e.pass_id)}>Pass note</Button>}
                                 </div>
@@ -432,6 +434,22 @@ const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, add
                 </div>
                 <div className="modal-buttons">
                     <Button className="margin-top button-wide" onClick={hidePasswordModal}>
+                        Cancel
+                    </Button>
+                </div>
+            </Modal>
+        )}
+
+        {modalDecryptPassword && (
+            <Modal title='Enter decryption password'>
+                <div className="pass-note">
+                    <Input type="password" id="decrypt-password-input" />
+                </div>
+                <div className="modal-buttons">
+                    <Button className="margin-top button-wide" onClick={() => decryptPass(pickedPassToShow, token, selectedGroup, addDecryptedPassToStore, error, hideModalDecryptPassword)()}>
+                        Decrypt
+                    </Button>
+                    <Button className="margin-top button-wide" onClick={hideModalDecryptPassword}>
                         Cancel
                     </Button>
                 </div>

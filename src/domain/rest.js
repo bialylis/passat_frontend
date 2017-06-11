@@ -95,10 +95,10 @@ export const getGroupPasswords = (xAuthToken, groupId) => getJsonData(
     })
 );
 
-export const getGroupPassword = (xAuthToken, groupId, passId) => getJsonData(
+export const getGroupPassword = (xAuthToken, groupId, passId, privateKeyPassword) => getJsonData(
     fetch(`${origin}/auth/group/${groupId}/password/${passId}`, {
         method: "GET",
-        headers: prepareHeaders(xAuthToken)
+        headers: prepareHeaders(xAuthToken, privateKeyPassword)
     })
 );
 
@@ -150,12 +150,17 @@ export const sendResetEmail = (username) => getJsonData(
     })
 );
 
-const prepareHeaders = (xAuthToken) => {
+const prepareHeaders = (xAuthToken, privateKeyPassword) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    console.log(privateKeyPassword);
+    if(privateKeyPassword){
+        headers.append('key_password', privateKeyPassword);
+    }
     if (xAuthToken) {
         headers.append('x-auth-token', xAuthToken);
     }
+
     return headers;
 };
 
