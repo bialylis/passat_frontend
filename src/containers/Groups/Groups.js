@@ -59,7 +59,13 @@ const mapDispatchToProps = (dispatch) => ({
     },
     addDecryptedPassToStore: (index, data) => {
         dispatch({type: "ADD_DECRYPTED_PASS", index, data})
-    }
+    },
+    showResetKeysModal: () => {
+        dispatch({type: "SHOW_RESET_KEYS_MODAL"})
+    },
+    hideResetKeysModal: () => {
+        dispatch({type: "HIDE_RESET_KEYS_MODAL"})
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Groups);

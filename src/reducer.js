@@ -1,4 +1,4 @@
-const appReducer = (state = {}, action) => {
+const appReducer = (state = {loginFlow: true}, action) => {
     switch (action.type) {
         case 'LOG_IN':
             return {
@@ -144,6 +144,37 @@ const appReducer = (state = {}, action) => {
                 encodedGroupPasswords: newerPasses
             };
         }
+        case 'SHOW_RESET_KEYS_MODAL':
+            return {
+                ...state,
+                modalShowResetKeys: true
+            };
+        case 'HIDE_RESET_KEYS_MODAL':
+            return {
+                ...state,
+                modalShowResetKeys: false
+            };
+        case 'FORGOT_FLOW':
+            return {
+                ...state,
+                loginFlow: false,
+                forgotFlow: true,
+                resetFlow: false
+            };
+        case 'RESET_FLOW':
+            return {
+                ...state,
+                loginFlow: false,
+                resetFlow: true,
+                forgotFlow: false,
+            };
+        case 'LOGIN_FLOW':
+            return {
+                ...state,
+                loginFlow: true,
+                resetFlow: false,
+                forgotFlow: false,
+            };
     default:
       return state
   }

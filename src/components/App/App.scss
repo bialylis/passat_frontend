@@ -118,8 +118,8 @@ a {
 		margin-right: 12px;
         padding-top: 0;
         padding-bottom: 0;
-		width: 120px;
-        min-width: 120px;
+		width: 110px;
+        min-width: 110px;
 	}
 }
 
@@ -262,7 +262,7 @@ body {
 
 .logout-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
@@ -368,6 +368,7 @@ body {
 .group-main-view-button {
   min-width: 140px;
   margin-top: 18px;
+  min-height: 32px;
 }
 
 .remove-icon {
@@ -473,4 +474,13 @@ body {
 .pass-note {
   text-align: center;
   font-size: 16px;
+}
+
+.margin-right {
+  margin-right: 12px;
+}
+
+.large {
+  width: 150px;
+  min-width: 150px;
 }

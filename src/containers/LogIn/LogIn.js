@@ -17,6 +17,15 @@ const mapDispatchToProps = (dispatch) => ({
     },
     setGroups: (groups) => {
         dispatch({type: "SET_GROUPS", groups: groups});
+    },
+    setForgotFlow: () => {
+        dispatch({type: "FORGOT_FLOW"})
+    },
+    setResetFlow: () => {
+        dispatch({type: "RESET_FLOW"})
+    },
+    setLoginFlow: () => {
+        dispatch({type: "LOGIN_FLOW"})
     }
 });
 
