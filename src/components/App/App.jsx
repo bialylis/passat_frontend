@@ -10,7 +10,7 @@ import './App.scss';
 
 const App = ({flow, info}) => {
 	return (
-		<div className="main max-height">
+		<div className="main max-height-body">
 			{/*<div className="info">
 				<div className="info__text">
 					{info}

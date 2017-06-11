@@ -38,6 +38,7 @@ const appReducer = (state = {loginFlow: true}, action) => {
         case 'LOG_OUT':
             return {
                 flow: 0,
+                loginFlow: true,
                 info: 'Successfully logged out'
             };
         case 'SELECT_GROUP':

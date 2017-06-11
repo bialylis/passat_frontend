@@ -215,7 +215,9 @@ const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, add
                     })}
                 </ul>
                 <Input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
-                <div className="plus-icon" onClick={addGroup(token, addToGroups)}/>
+                <div className="icon-block">
+                    <div className="plus-icon" onClick={addGroup(token, addToGroups)}/>
+                </div>
             </div>
             <div className="form-container groups-content">
                 {(user.public_key === null || modalShowResetKeys) && <Modal title="Enter your new private key password.">
@@ -355,6 +357,7 @@ const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, add
                                 <Button className="group-input__item" onClick={switchToMainGroupPanel}>Back</Button>
                             </div>
                             <strong className="users-table-header users-table-header--passwords margin-bottom">Group Passwords - Admin: {groupData.username}</strong>
+                            <div className="margin-top"/>
                             {encodedGroupPasswords.map((e, index) => (
                                 <div key={index} className="group-input margin-top">
                                     <span className="group-input__item">{e.pass_name}:</span>
@@ -365,6 +368,8 @@ const Groups = ({modalShowResetKeys, showResetKeysModal, hideResetKeysModal, add
                                     {e.note && <Button className="group-input__item" onClick={showPasswordModal(e.pass_id)}>Pass note</Button>}
                                 </div>
                             ))}
+                            <div className="margin-bottom"/>
+
                             {/*<div className="group-input margin-top">
                                 <span className="group-input__item">Facebook:</span>
                                 <span className="group-input__item">fblogin</span>
