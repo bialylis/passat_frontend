@@ -124,10 +124,22 @@ export const deleteGroupPasswordsForUser = (xAuthToken, groupId, user) => getJso
     })
 );
 
-export const deletePass = (xAuthToken, passId, groupId) => getJsonData(
-    fetch(`${origin}/auth/group/${groupId}/password`, { //TODO ALTER ENDPOINT
+export const deletePass = (xAuthToken, passName, groupId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/password`, {
         method: "DELETE",
-        headers: prepareHeaders(xAuthToken)
+        headers: addPassnameHeader(prepareHeaders(xAuthToken), passName)
+    })
+);
+
+export const addPassnameHeader = (headers, passname) => {
+    headers.append('passname', passname);
+    return headers;
+};
+
+export const checkAvailability = (xAuthToken, passName, groupId) => getJsonData(
+    fetch(`${origin}/auth/group/${groupId}/namecheck`, {
+        method: "GET",
+        headers: addPassnameHeader(prepareHeaders(xAuthToken), passName)
     })
 );
 
@@ -148,7 +160,6 @@ export const sendResetEmail = (username) => getJsonData(
 const prepareHeaders = (xAuthToken, privateKeyPassword) => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    console.log(privateKeyPassword);
     if(privateKeyPassword){
         headers.append('key_password', privateKeyPassword);
     }

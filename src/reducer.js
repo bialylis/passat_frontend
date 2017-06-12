@@ -27,8 +27,7 @@ const appReducer = (state = {loginFlow: true}, action) => {
         case 'SET_GROUPS':
             return {
             ...state,
-            groups: action.groups,
-            info: 'Fetched groups'
+            groups: action.groups
         };
         case 'NEW_INFO':
             return {
@@ -45,7 +44,6 @@ const appReducer = (state = {loginFlow: true}, action) => {
             return {
                 ...state,
                 selectedGroup: action.id,
-                info: `Picked group with id ${action.id}`,
                 groupFlow: 1,
                 encodedGroupPasswords: []
             };

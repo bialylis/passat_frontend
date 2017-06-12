@@ -12,7 +12,8 @@ import {
     getGroupPasswords as restGetGroupPasswords,
     getGroupPassword as restGetGroupPassword,
     deleteGroupPasswordsForUser as restDeleteGroupPasswordsForUser,
-    deletePass as restDeletePass
+    deletePass as restDeletePass,
+    checkAvailability as restCheckAvailability
 } from '../../domain/rest';
 import Button from '../Button';
 import Input from '../Input';
@@ -22,12 +23,15 @@ import UserIcon from '../../icons/user-icon.png';
 const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToStore, error, hideModalDecryptPassword) => () => {
     const privateKeyPassword = document.getElementById('decrypt-password-input').value;
     restGetGroupPassword(token, selectedGroup, pickedPassToShow, privateKeyPassword).then(jsonData => {
-        if(jsonData.status === 400) {
+        if(jsonData.status === 400 || jsonData.status === 503 || jsonData.status === 500) {
             error('Could not get password');
+            setTimeout(() => error(''), 2500);
         } else if (jsonData.status === 401) {
             error('User unauthorized');
+            setTimeout(() => error(''), 2500);
         } else {
-                error('Fetched password');
+                error('Password has been fetched');
+                setTimeout(() => error(''), 2500);
                 addDecryptedPassToStore(pickedPassToShow, jsonData);
         }
         hideModalDecryptPassword();
@@ -37,16 +41,17 @@ const decryptPass = (pickedPassToShow, token, selectedGroup, addDecryptedPassToS
     hidePasswordModal();*/
 };
 
-const deletePass = (passId, token, selectedGroup, error, setGroupPasswords, removePassword) => () => {
-    /*restDeletePass(token, passId, selectedGroup).then(jsonData => {
-        if(jsonData.status === 400) {
+const deletePass = (passName, passId, token, selectedGroup, error, setGroupPasswords, removePassword) => () => {
+    restDeletePass(token, passName, selectedGroup).then(jsonData => {
+        if(jsonData.status === 400 || jsonData.status === 401 || jsonData.status === 503 || jsonData.status === 500) {
             error('Could not deletePassword');
+            setTimeout(() => error(''), 2500);
         } else {
             error('Deleted password');
+            setTimeout(() => error(''), 2500);
             removePassword(passId);
         }
-    });*/
-    error('Deleted password');
+    });
 };
 
 const getGroup = (selectGroup, setGroupData, token, groupId) => () => {
@@ -56,11 +61,12 @@ const getGroup = (selectGroup, setGroupData, token, groupId) => () => {
      })
 };
 
-const addGroup = (token, addToGroups) => () => {
+const addGroup = (token, addToGroups, error) => () => {
     if(document.getElementById('new-group-name').value.trim() !== '') {
         const name = document.getElementById('new-group-name').value;
         restAddGroup(token, name).then((jsonData) => {
             addToGroups(jsonData);
+            setTimeout(() => error(''), 2500);
         });
     }
 };
@@ -78,10 +84,12 @@ const generateKeys = (token, logOut, error) => () => {
     const encription_pass = document.getElementById('private-key-password').value;
     if(encription_pass.trim() !== "") {
         restGenerateKeys(token, encription_pass).then((response) => {
-            if (response.status === 400) {
+            if (response.status === 400 || response.status === 401 || response.status === 503 || response.status === 500) {
                 error('Could not generate keys');
+                setTimeout(() => error(''), 2500);
             } else {
                 error('Keys were generated');
+                setTimeout(() => error(''), 2500);
                 logOut();
             }
         })
@@ -90,30 +98,33 @@ const generateKeys = (token, logOut, error) => () => {
 
 const getGroupPasswords = (token, setGroupPasswords, selectedGroup, error) => {
     restGetGroupPasswords(token, selectedGroup).then(jsonData => {
-        if(jsonData.status === 400) {
-            console.log('error during fetching passes');
+        if(jsonData.status === 400 || jsonData.status === 401 || jsonData.status === 503 || jsonData.status === 500) {
             error('Could not get passwords');
+            setTimeout(() => error(''), 2500);
         } else {
-            console.log('passwords');
             error('Fetched passwords for group');
+            setTimeout(() => error(''), 2500);
             setGroupPasswords(jsonData);
         }
     })
 };
 
-const deleteGroup = (token, logout, error) => () => {
+const deleteGroup = (token, selectedGroup, deleteFromGroups, error) => () => {
     restDeleteGroup(token, selectedGroup).then(() => {
         deleteFromGroups(selectedGroup);
+        setTimeout(() => error(''), 2500);
     })
 };
 
 const addMember = (token, selectedGroup, hideModal, error, setGroupData) => () => {
     const userEmail = document.getElementById('input-modal-new-member-id').value;
     restAddMemberToGroup(token, selectedGroup, userEmail).then((response) => {
-        if(response.status === 400) {
+        if(response.status === 400 || response.status === 401 || response.status === 503 || response.status === 500) {
             error('Could not invite user');
+            setTimeout(() => error(''), 2500);
         } else {
             error('Added member to group');
+            setTimeout(() => error(''), 2500);
             restGetGroup(token, selectedGroup).then((jsonData) => {
                 setGroupData(jsonData);
             });
@@ -123,11 +134,11 @@ const addMember = (token, selectedGroup, hideModal, error, setGroupData) => () =
 };
 
 const removeMember = (token, selectedGroup, hideModal, userId, error, setGroupData) => () => {
-    console.log(userId);
     //const userId = document.getElementById('input-modal-remove-member-id').value;
     restRemoveMemberFromGroup(token, selectedGroup, userId).then((response) => {
-        if(response.status === 401) {
-            error('You don not have permission to remove other users');
+        if(response.status === 401 || response.status === 400 || response.status === 503 || response.status === 500) {
+            error('Permission required');
+            setTimeout(() => error(''), 2500);
         } else {
             restGetGroup(token, selectedGroup).then((jsonData) => {
                 setGroupData(jsonData);
@@ -143,20 +154,32 @@ const addPasswordForGroup = (token, groupData, groupId, user, error) => {
     const login = document.getElementById('add-pass-login').value;
     const pass = document.getElementById('add-pass-pass').value;
     const note = document.getElementById('add-pass-desc').value;
-    groupData.userList.forEach(u => {
-        restAddGroupPasswordForUser(token, groupId, groupData, u, name, login, pass, note).then(response => {
-            if(response.status === 400) {
-                error('Could not add password');
-            } else {
-                error('Added password');
-            }
-        });
-    });
-    restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
-        if(response.status === 400) {
-            error('Could not add password');
+
+    restCheckAvailability(token, name, groupId).then(response => {
+        if(response.status === 400 || response.status === 401) {
+            error('Password name exists');
+            setTimeout(() => error(''), 2500);
         } else {
-            error('Added password');
+            groupData.userList.forEach(u => {
+                restAddGroupPasswordForUser(token, groupId, groupData, u, name, login, pass, note).then(response => {
+                    if(response.status === 400) {
+                        error('Could not add password');
+                        setTimeout(() => error(''), 2500);
+                    } else {
+                        error('Added password');
+                        setTimeout(() => error(''), 2500);
+                    }
+                });
+            });
+            restAddGroupPasswordForUser(token, groupId, groupData, user, name, login, pass, note).then(response => {
+                if(response.status === 400) {
+                    error('Could not add password');
+                    setTimeout(() => error(''), 2500);
+                } else {
+                    error('Added password');
+                    setTimeout(() => error(''), 2500);
+                }
+            });
         }
     });
 };
@@ -170,7 +193,7 @@ const resetGroupPasswordsForUser = (token, groupId, error, user, selectedGroup, 
             //getting admin passwords
             let passwords = [];
             restGetGroupPasswords(token, selectedGroup).then(jsonData => {
-                if(jsonData.status === 400) {
+                if(jsonData.status === 400 || jsonData.status === 401 || jsonData.status === 503 || jsonData.status === 500) {
 
                 } else {
                     setGroupPasswords(jsonData);
@@ -182,10 +205,12 @@ const resetGroupPasswordsForUser = (token, groupId, error, user, selectedGroup, 
                             } else if (jsonData2.status === 401) {
                             } else {
                                 restAddGroupPasswordForUser(token, groupId, groupData, {user_id: user}, jsonData2.pass_name, jsonData2.login, jsonData2.password, jsonData2.note).then(response => {
-                                    if(response.status === 400) {
+                                    if(response.status === 400 || response.status === 401 || response.status === 503 || response.status === 500) {
                                         error('Could not add password');
+                                        setTimeout(() => error(''), 2500);
                                     } else {
-                                        error('Passwords are reset');
+                                        error('Passwords were reset');
+                                        setTimeout(() => error(''), 2500);
                                     }
                                 });
                             }
@@ -246,7 +271,7 @@ const Groups = ({removePassword, userToReset, modalResetDecryptPassword, showMod
                 </ul>
                 <Input id="new-group-name" className="new-group-input" placeholder="New group name..." type="text" />
                 <div className="icon-block">
-                    <div className="plus-icon" onClick={addGroup(token, addToGroups)}/>
+                    <div className="plus-icon" onClick={addGroup(token, addToGroups, error)}/>
                 </div>
             </div>
             <div className="form-container groups-content">
@@ -293,6 +318,7 @@ const Groups = ({removePassword, userToReset, modalResetDecryptPassword, showMod
                                 </table>
                             </div>
                             <div className="buttons-col">
+                                {groupData.username === user.username && <Button className="button group-main-view-button" onClick={deleteGroup(token, selectedGroup, deleteFromGroups, error)}>Delete group</Button>}
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={addGroupPassword}>Add password</Button>}
 {/*
                                 {groupData.username === user.username && <Button className="button group-main-view-button" onClick={groupSettings}>Group settings</Button>}
@@ -396,7 +422,7 @@ const Groups = ({removePassword, userToReset, modalResetDecryptPassword, showMod
                                     <Input className="group-input__item wide200" type="text" value={e.login || 'Login'} disabled/>
                                     <Input className="group-input__item wide200" type="text" value={e.password || 'Password'} disabled/>
                                     <Button className="group-input__item" onClick={showModalDecryptPassword(e.pass_id)}>Show</Button>
-                                    <Button className="group-input__item" onClick={() => {deletePass(e.pass_id, token, selectedGroup, error, setGroupPasswords, removePassword)()}}>Delete</Button>
+                                    {groupData.username === user.username && <Button className="group-input__item" onClick={() => {deletePass(e.pass_name, e.pass_id, token, selectedGroup, error, setGroupPasswords, removePassword)()}}>Delete</Button>}
                                     {e.note && <Button className="group-input__item" onClick={showPasswordModal(e.pass_id)}>Pass note</Button>}
                                 </div>
                             ))}

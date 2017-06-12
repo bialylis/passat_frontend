@@ -49,17 +49,20 @@ const loginUser = (loggedIn, setGroups, error, showModalForPrivateKeyPass) => ()
     restLoginUser(username, password).then((jsonData) => {
         if(jsonData.token){
             loggedIn(jsonData.user, jsonData.token);
-            fetchGroups(jsonData.token, setGroups);
+            fetchGroups(jsonData.token, setGroups, error);
+            setTimeout(() => error(''), 2500);
         } else {
             error('Failed to log in');
+            setTimeout(() => error(''), 2500);
         }
     });
 };
 
-const fetchGroups = (token, setGroups) => {
+const fetchGroups = (token, setGroups, error) => {
     restFetchGroups(token).then((jsonData) => {
         setGroups(jsonData);
     });
+    setTimeout(() => error(''), 2500);
 };
 
 const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForgotFlow, setResetFlow, resetFlow, loginFlow, forgotFlow  }) => (
@@ -81,26 +84,6 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                          </Button>*/}
                         </div>
                     </div>
-                }
-                {/*{forgotFlow &&
-                <div className="login__signup">
-                    <span className="basic-flex">Forgot password</span>
-                    <div className="basic-flex">
-                        <Button onClick={setLoginFlow}>
-                             Back
-                        </Button>
-                    </div>
-                </div>
-                }
-                {resetFlow &&
-                <div className="login__signup">
-                    <span className="basic-flex">Reset password</span>
-                    <div className="basic-flex">
-                        <Button onClick={setLoginFlow}>
-                            Back
-                        </Button>
-                    </div>
-                </div>*/}
                 }
                 {loginFlow &&
                     <div className="login__inputs">
@@ -152,7 +135,6 @@ const LogIn = ({ signUp, loggedIn, error, setGroups, info, setLoginFlow, setForg
                     </Button>
                 </div>
                 }*/}
-
             </div>
         </div>
     </div>

@@ -11,8 +11,10 @@ const registerUser = (logIn, error, newInfo) => () => {
         if(jsonData.success){
             logIn();
             newInfo('Registration complete');
+            setTimeout(() => error(''), 2500);
         } else {
             error('Error during registration');
+            setTimeout(() => error(''), 2500);
         }
     });
 };
